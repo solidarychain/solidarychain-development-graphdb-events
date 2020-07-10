@@ -2,14 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { QueryResult } from 'neo4j-driver';
 import { Neo4jService } from './neo4j/neo4j.service';
 import { MovieDto } from './neo4j/dto/movie.dto';
+import { NetworkService } from './network/network.service';
 
 @Injectable()
 export class AppService {
 
-  constructor(private readonly neo4jService: Neo4jService) { }
+  constructor(
+    private readonly neo4jService: Neo4jService,
+    private readonly networkService: NetworkService
+  ) { }
 
   getHello(): string {
-    return 'Hello World!';
+    return `Hello World! ${this.networkService.getConfig().chaincodeName}`;
   }
 
   async getTotalNodes(): Promise<string> {

@@ -87,7 +87,14 @@ replace `src/app.module.ts`
 imports: [Neo4jModule]
 ```
 
-## Fix Tests
+with
+```typescript
+imports: [
+  Neo4jModule.forRootAsync({...
+]
+```
+
+## TODO: Fix Tests: WIP
 
 ```shell
 $ npm run test
@@ -110,8 +117,6 @@ describe('Neo4jService', () => {
 
 remove `providers: [Neo4jService]` from `src/neo4j/neo4j.service.spec.ts`
 
-
-
 ```shell
 Error: Nest can\'t resolve dependencies of the AppService (?). Please make sure that the argument Neo4jService at index [0] is available in the RootTestModule context.
 
@@ -121,4 +126,20 @@ Potential solutions:
   @Module({
     imports: [ /* the Module containing Neo4jService */ ]
   })Jest
+```
+
+## Configure Fabric with nestjs
+
+```shell
+# install dependencies
+$ npm i fabric-ca-client fabric-network
+# create modules
+$ nest g mo network
+# create service
+$ nest g s network
+# create interface
+$ nest g interface network-config
+
+nest g m
+nest g s
 ```

@@ -1,0 +1,90 @@
+{
+  "blockNumber": 128,
+  "transactionId": "1aa20cdbe7862fc17a633863cc9c5f6261e28d253e40ee4c899ba4e635e5504a",
+  "transactionStatus": "VALID",
+  "id": "Ticiy",
+  "type": "com.chain.solidary.model.participant",
+  "code": "Ticiy",
+  "name": "Ticiy",
+  "msp": "Org1MSP",
+  "participant": {
+    "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+    "type": "com.chain.solidary.model.participant",
+    "code": "gov",
+    "name": "Big Government",
+    "msp": "Org1MSP",
+    "identities": [
+      {
+        "fingerprint": "3C:70:F3:CE:C4:27:C2:91:50:64:EC:79:A3:DB:2E:69:88:9D:9E:47",
+        "status": true
+      }
+    ],
+    "createdDate": 1593987807611,
+    "fundsBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "volunteeringHoursBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "goodsStock": [
+      {
+        "balance": {
+          "balance": 100,
+          "credit": 100,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "barCode": "ean008",
+        "code": "008",
+        "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1838010",
+        "createdDate": 1593987913368,
+        "description": "description008CHANGE-FAIL",
+        "id": "80450045-d20d-4cdd-b937-c9bb46a48581",
+        "name": "name008CHANGE-FAIL",
+        "type": "com.chain.solidary.model.goods"
+      },
+      {
+        "balance": {
+          "balance": 800,
+          "credit": 800,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "barCode": "ean009",
+        "code": "009",
+        "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1838010",
+        "createdDate": 1593987913369,
+        "description": "description009",
+        "id": "80450045-d20d-4cdd-b937-c9bb46a48582",
+        "name": "name009",
+        "type": "com.chain.solidary.model.goods"
+      }
+    ]
+  },
+  "identities": [
+    {
+      "fingerprint": "7C:3E:4D:48:1E:04:CF:65:B6:4E:4C:5F:44:2E:07:3B:AC:50:AE:21",
+      "status": true
+    }
+  ],
+  "createdDate": 1594249164000,
+  "fundsBalance": {
+    "type": "com.chain.solidary.model.entityBalance",
+    "debit": 0,
+    "credit": 0,
+    "balance": 0
+  },
+  "volunteeringHoursBalance": {
+    "type": "com.chain.solidary.model.entityBalance",
+    "debit": 0,
+    "credit": 0,
+    "balance": 0
+  },
+  "goodsStock": []
+}

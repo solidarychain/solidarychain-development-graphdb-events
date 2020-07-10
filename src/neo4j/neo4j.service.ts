@@ -41,5 +41,4 @@ export class Neo4jService {
     const session: Session = this.getWriteSession(database);
     return session.run(cypher, params);
   };
-
 }

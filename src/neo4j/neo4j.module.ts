@@ -1,4 +1,4 @@
-import { Module, DynamicModule, Provider } from '@nestjs/common';
+import { Module, DynamicModule, Provider, Logger } from '@nestjs/common';
 import { Neo4jService } from './neo4j.service';
 import { Neo4jConfig } from './neo4j-config.interface';
 import { NEO4J_CONFIG, NEO4J_DRIVER } from './neo4j.constants';
@@ -43,7 +43,6 @@ export class Neo4jModule {
       module: Neo4jModule,
       global: true,
       imports: [ConfigModule],
-
       providers: [
         {
           provide: NEO4J_CONFIG,
