@@ -51,11 +51,11 @@ export class ChaincodeEventActions {
     // });
 
     // await this.contract.addContractListener(`contract-listener-${'AssetCreatedEvent'.toLowerCase()}`, ChaincodeEvent.AssetCreatedEvent.toString(), (error, event, blockNumber, transactionId, status) => {
-    //   this.chaincodeEventActionParticipantCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+    //   this.chaincodeEventActionParticipantCreatedEvent(payload, event, blockNumber, transactionId, status);
     // });
 
     // await this.contract.addContractListener(`contract-listener-${'ParticipantCreatedEvent'.toLowerCase()}`, ChaincodeEvent.ParticipantCreatedEvent.toString(), (error, event, blockNumber, transactionId, status) => {
-    //   this.chaincodeEventActionParticipantCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+    //   this.chaincodeEventActionParticipantCreatedEvent(payload, event, blockNumber, transactionId, status);
     // });
 
     await this.contract.addContractListener('contract-listener', '(.*?)', (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => {
@@ -71,7 +71,7 @@ export class ChaincodeEventActions {
       Logger.debug(`Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
       Logger.debug(`${eventName}: ${JSON.stringify(payload, undefined, 2)}`);
       // delegateEvent
-      this.delegateChaincodeEvent(eventEnum, payload, error, event, blockNumber, transactionId, status);
+      this.delegateChaincodeEvent(eventEnum, payload, event, blockNumber, transactionId, status);
     });
 
     // TODO
@@ -81,62 +81,62 @@ export class ChaincodeEventActions {
     Logger.error(`Failed to submit transaction: ${error}`);
   }
 
-  private delegateChaincodeEvent(eventEnum: ChaincodeEvent, payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) {
+  private delegateChaincodeEvent(eventEnum: ChaincodeEvent, payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) {
     switch (eventEnum) {
       // Asset
       case ChaincodeEvent.AssetCreatedEvent:
-        this.chaincodeEventActionAssetCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionAssetCreatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.AssetUpdatedEvent:
-        this.chaincodeEventActionAssetUpdatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionAssetUpdatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.CauseCreatedEvent:
-        this.chaincodeEventActionCauseCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionCauseCreatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.CauseUpdatedEvent:
-        this.chaincodeEventActionCauseUpdatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionCauseUpdatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       // Participant
       case ChaincodeEvent.ParticipantCreatedEvent:
-        this.chaincodeEventActionParticipantCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionParticipantCreatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.ParticipantUpdatedEvent:
-        this.chaincodeEventActionParticipantUpdatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionParticipantUpdatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.ParticipantChangeIdentityEvent:
-        this.chaincodeEventActionParticipantChangeIdentityEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionParticipantChangeIdentityEvent(payload, event, blockNumber, transactionId, status);
         break;
       // Person
       case ChaincodeEvent.PersonCreatedEvent:
-        this.chaincodeEventActionPersonCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonCreatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.PersonUpdatedEvent:
-        this.chaincodeEventActionPersonUpdatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonUpdatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.PersonUpdatePasswordEvent:
-        this.chaincodeEventActionPersonUpdatePasswordEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonUpdatePasswordEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.PersonUpdateProfileEvent:
-        this.chaincodeEventActionPersonUpdateProfileEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonUpdateProfileEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.PersonUpdateRolesEvent:
-        this.chaincodeEventActionPersonUpdateRolesEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonUpdateRolesEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.PersonUpsertCitizenCardEvent:
-        this.chaincodeEventActionPersonUpsertCitizenCardEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonUpsertCitizenCardEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.PersonAddAttributeEvent:
-        this.chaincodeEventActionPersonAddAttributeEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionPersonAddAttributeEvent(payload, event, blockNumber, transactionId, status);
         break;
       // Transaction
       case ChaincodeEvent.TransactionCreatedEvent:
-        this.chaincodeEventActionTransactionCreatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionTransactionCreatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.TransactionUpdatedEvent:
-        this.chaincodeEventActionTransactionUpdatedEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionTransactionUpdatedEvent(payload, event, blockNumber, transactionId, status);
         break;
       case ChaincodeEvent.TransactionAssetChangeOwnerEvent:
-        this.chaincodeEventActionTransactionAssetChangeOwnerEvent(payload, error, event, blockNumber, transactionId, status);
+        this.chaincodeEventActionTransactionAssetChangeOwnerEvent(payload, event, blockNumber, transactionId, status);
         break;
       default:
         Logger.warn(`delegateChaincodeEvent: implement ${eventEnum}`);
@@ -144,75 +144,76 @@ export class ChaincodeEventActions {
     }
   }
 
-  private chaincodeEventActionAssetCreatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionAssetCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionAssetCreatedEvent`);
   }
 
-  private chaincodeEventActionAssetUpdatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionAssetUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionAssetUpdatedEvent`);
   }
 
-  private chaincodeEventActionCauseCreatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionCauseCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionCauseCreatedEvent`);
   }
 
-  private chaincodeEventActionCauseUpdatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionCauseUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionCauseUpdatedEvent`);
   }
 
-  private chaincodeEventActionParticipantCreatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
-    Logger.warn(`implement stub for chaincodeEventActionParticipantCreatedEvent`);
-    let participant: Participant = new Participant();
+  private chaincodeEventActionParticipantCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+    // Logger.warn(`implement stub for chaincodeEventActionParticipantCreatedEvent`);
+    let participant: Participant = new Participant(blockNumber, transactionId, status);
+    // assign object
     Object.assign(participant, payload);
-    Logger.debug(participant);
+    // Logger.debug(participant);
     participant.save(this.neo4jService);
   }
 
-  private chaincodeEventActionParticipantUpdatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionParticipantUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionParticipantUpdatedEvent`);
   }
 
-  private chaincodeEventActionParticipantChangeIdentityEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionParticipantChangeIdentityEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionParticipantChangeIdentityEvent`);
   }
 
-  private chaincodeEventActionPersonCreatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonCreatedEvent`);
   }
 
-  private chaincodeEventActionPersonUpdatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonUpdatedEvent`);
   }
 
-  private chaincodeEventActionPersonUpdatePasswordEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonUpdatePasswordEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonUpdatePasswordEvent`);
   }
 
-  private chaincodeEventActionPersonUpdateProfileEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonUpdateProfileEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonUpdateProfileEvent`);
   }
 
-  private chaincodeEventActionPersonUpdateRolesEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonUpdateRolesEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonUpdateRolesEvent`);
   }
 
-  private chaincodeEventActionPersonUpsertCitizenCardEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonUpsertCitizenCardEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonUpsertCitizenCardEvent`);
   }
 
-  private chaincodeEventActionPersonAddAttributeEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionPersonAddAttributeEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionPersonAddAttributeEvent`);
   }
 
-  private chaincodeEventActionTransactionCreatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionTransactionCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionTransactionCreatedEvent`);
   }
 
-  private chaincodeEventActionTransactionUpdatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionTransactionUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionTransactionUpdatedEvent`);
   }
 
-  private chaincodeEventActionTransactionAssetChangeOwnerEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
+  private chaincodeEventActionTransactionAssetChangeOwnerEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     Logger.warn(`implement stub for chaincodeEventActionTransactionAssetChangeOwnerEvent`);
   }
 }
