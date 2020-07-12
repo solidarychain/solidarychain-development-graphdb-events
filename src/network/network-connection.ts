@@ -1,12 +1,10 @@
 import { Logger } from '@nestjs/common';
-import { FileSystemWallet, Gateway, DefaultEventHandlerStrategies, Network, Contract } from 'fabric-network';
-import { NetworkConfig } from "./network-config.interface";
+import { Contract, FileSystemWallet, Gateway, Network } from 'fabric-network';
 import * as path from 'path';
 import { readJsonFromFile } from '../main.util';
-// import { EventFunction } from './network.types';
-// import { ChaincodeEvent } from './network.enums';
-import { ChaincodeEventActions } from './network-event-actions';
 import { Neo4jService } from '../neo4j/neo4j.service';
+import { NetworkConfig } from "./network-config.interface";
+import { ChaincodeEventActions } from './network-event-actions';
 
 export class NetworkConnection {
   private wallet: FileSystemWallet;
@@ -50,9 +48,11 @@ export class NetworkConnection {
     // this.initEvents();
     // init ContractListeners after initEvents
     // this.addContractListeners();
-    this.chaincodeEventActions = new ChaincodeEventActions(this.contract);
-    debugger;
-    Logger.debug(`${JSON.stringify(this.neo4jService.getDriver(), undefined, 2)}`);
+    this.chaincodeEventActions = new ChaincodeEventActions(this.contract, this.neo4jService);
+  }
+
+  getPeerIdentity() {
+    return this.peerIdentity;
   }
 
   /**
@@ -82,24 +82,24 @@ export class NetworkConnection {
   //   // Logger.debug(JSON.stringify(this.events, undefined, 2));
   // }
 
-  private async addContractListeners() {
-    await this.contract.addContractListener('my-contract-listener', '(.*?)', (err, event, blockNumber, transactionId, status) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
+  // private async addContractListeners() {
+  //   await this.contract.addContractListener('my-contract-listener', '(.*?)', (err, event, blockNumber, transactionId, status) => {
+  //     if (err) {
+  //       console.error(err);
+  //       return;
+  //     }
 
-      //convert event to something we can parse 
-      event = (event as any).payload.toString();
-      event = JSON.parse((event as any))
+  //     //convert event to something we can parse 
+  //     event = (event as any).payload.toString();
+  //     event = JSON.parse((event as any))
 
-      //where we output the Participant
-      Logger.debug(`Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
-      Logger.debug(`${JSON.stringify(event, undefined, 2)}`);
-    });
-    // Disconnect from the gateway.
-    // await gateway.disconnect();
-  } catch(error) {
-    Logger.error(`Failed to submit transaction: ${error}`);
-  }
+  //     //where we output the Participant
+  //     Logger.debug(`Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
+  //     Logger.debug(`${JSON.stringify(event, undefined, 2)}`);
+  //   });
+  //   // Disconnect from the gateway.
+  //   // await gateway.disconnect();
+  // } catch(error) {
+  //   Logger.error(`Failed to submit transaction: ${error}`);
+  // }
 }

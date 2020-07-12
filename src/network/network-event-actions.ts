@@ -10,8 +10,10 @@ import { ChaincodeEvent } from "./network.enums";
 
 // define class method ChaincodeEvents to manage socket generic actions
 export class ChaincodeEventActions {
-  constructor(private readonly contract: Contract) {
-    debugger;
+  constructor(
+    private readonly contract: Contract,
+    private readonly neo4jService: Neo4jService
+  ) {
     this.addContractListener();
   }
 
@@ -163,7 +165,7 @@ export class ChaincodeEventActions {
     let participant: Participant = new Participant();
     Object.assign(participant, payload);
     Logger.debug(participant);
-    participant.save();
+    participant.save(this.neo4jService);
   }
 
   private chaincodeEventActionParticipantUpdatedEvent(payload: any, error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
