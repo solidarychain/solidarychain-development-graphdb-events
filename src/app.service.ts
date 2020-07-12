@@ -6,7 +6,6 @@ import { NetworkService } from './network/network.service';
 
 @Injectable()
 export class AppService {
-
   constructor(
     private readonly neo4jService: Neo4jService,
     private readonly networkService: NetworkService

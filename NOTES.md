@@ -1,5 +1,9 @@
 # NOTES
 
+## TLDR
+
+project use `node/v10.12.0` version
+
 ## Links
 
 P1 https://www.youtube.com/watch?v=9sNgCiPnhZE
@@ -143,3 +147,16 @@ $ nest g interface network-config
 nest g m
 nest g s
 ```
+
+## Fix: node_modules/fs-extra/lib/mkdirs/make-dir.js:86
+
+- [PKG Dependency has an issue](https://github.com/vercel/pkg/issues/883)
+
+```shell
+/media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-graphdb-events/node_modules/fs-extra/lib/mkdirs/make-dir.js:86
+      } catch {
+```
+
+> I had the same issue using node 8.10.0, After upgrading my node version to 10.13.0 the error was gone
+
+> use `node/v10.12.0` or greater, there is no need to use `node/v8.16.0`, this is not a convector project

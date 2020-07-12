@@ -1,32 +1,37 @@
-import { Module, DynamicModule, Provider } from '@nestjs/common';
-import { NetworkService } from './network.service';
+import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { NETWORK_CONFIG } from './network.constants';
+import { NetworkConfig } from './network-config.interface';
+import { NetworkConnection } from './network-connection';
+import { NETWORK_CONFIG, NETWORK_CONNECTION } from './network.constants';
+import { NetworkService } from './network.service';
+import { createNetworkConnection } from './network.util';
+import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { NEO4J_DRIVER } from 'src/neo4j/neo4j.constants';
+import { Neo4jModule } from 'src/neo4j/neo4j.module';
 
 @Module({
   providers: [NetworkService]
 })
 
 export class NetworkModule {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static forRootAsync(configProvider): DynamicModule {
     return {
       module: NetworkModule,
       global: true,
-      imports: [ConfigModule],
+      imports: [ConfigModule, Neo4jModule],
       providers: [
         NetworkService,
         {
           provide: NETWORK_CONFIG,
           ...configProvider
         } as Provider<any>,
-        // {
-        //   provide: NEO4J_DRIVER,
-        //   inject: [NEO4J_CONFIG],
-        //   useFactory: async (config: NetworkConfig): Promise<Driver> => {
-        //     return createDriver(config);
-        //   },
-        // },
+        {
+          provide: NETWORK_CONNECTION,
+          inject: [NETWORK_CONFIG, Neo4jService],
+          useFactory: async (config: NetworkConfig, neo4jService: Neo4jService): Promise<NetworkConnection> => {
+            return createNetworkConnection(config, neo4jService);
+          },
+        },
       ],
       exports: [
         NetworkService,

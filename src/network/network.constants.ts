@@ -1,2 +1,3 @@
 // providers
 export const NETWORK_CONFIG = 'NETWORK_CONFIG';
+export const NETWORK_CONNECTION = 'NETWORK_CONNECTION';

@@ -37,7 +37,6 @@ export class Neo4jModule {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static forRootAsync(configProvider): DynamicModule {
     return {
       module: Neo4jModule,

@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { Neo4jModule } from './neo4j/neo4j.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NetworkModule } from './network/network.module';
+import { Neo4jService } from './neo4j/neo4j.service';
 
 @Module({
   imports: [
@@ -38,8 +39,8 @@ import { NetworkModule } from './network/network.module';
         orderer: configService.get('NETWORK_ORDERER'),
         peerIdentity: configService.get('NETWORK_PEER_IDENTITY'),
         gatewayDiscovery: {
-          enabled: configService.get('NETWORK_GATEWAY_DISCOVERY_ENABLED'),
-          asLocalhost: configService.get('NETWORK_GATEWAY_DISCOVERY_AS_LOCALHOST'),
+          enabled: Boolean(configService.get('NETWORK_GATEWAY_DISCOVERY_ENABLED')),
+          asLocalhost: Boolean(configService.get('NETWORK_GATEWAY_DISCOVERY_AS_LOCALHOST')),
         }
       })
     }),
