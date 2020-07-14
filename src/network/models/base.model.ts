@@ -19,8 +19,9 @@ export class BaseModel {
   public status: string;
 
   constructor(
-    blockNumber?: string, transactionId?: string, status?: string,
+    payload: any, blockNumber?: string, transactionId?: string, status?: string,
   ) {
+    Object.assign(this, payload);
     this.blockNumber = Number(blockNumber);
     this.transactionId = transactionId;
     this.status = status;

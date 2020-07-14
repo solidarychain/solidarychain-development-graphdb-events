@@ -1,0 +1,139 @@
+{
+  "id": "f8bc6413-d0be-4678-8f1a-de2660f79d41",
+  "type": "com.chain.solidary.model.cause",
+  "name": "NewCause#07 [f8bc6413]",
+  "input": {
+    "entity": {
+      "id": "f8596b03-492d-4d46-b54e-c4a70a037aa5",
+      "type": "com.chain.solidary.model.participant",
+      "code": "bad",
+      "name": "Bad Bank",
+      "msp": "Org1MSP",
+      "participant": {
+        "code": "gov",
+        "createdDate": 1594482960114,
+        "fundsBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "goodsStock": [],
+        "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+        "identities": [
+          {
+            "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+            "status": true
+          }
+        ],
+        "msp": "Org1MSP",
+        "name": "Big Government",
+        "type": "com.chain.solidary.model.participant",
+        "volunteeringHoursBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        }
+      },
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "createdDate": 1594482972978,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "volunteeringHoursBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": []
+    }
+  },
+  "participant": {
+    "id": "0192a411-75c6-4b70-b456-141cad74b0fc",
+    "type": "com.chain.solidary.model.participant",
+    "code": "part85",
+    "name": "Part85",
+    "msp": "Org1MSP",
+    "participant": {
+      "code": "gov",
+      "createdDate": 1594482960114,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": [],
+      "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "msp": "Org1MSP",
+      "name": "Big Government",
+      "type": "com.chain.solidary.model.participant",
+      "volunteeringHoursBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      }
+    },
+    "identities": [
+      {
+        "fingerprint": "C6:53:99:76:CB:20:C4:8B:A3:E8:33:C2:D2:56:0C:7A:52:D6:4A:4C",
+        "status": true
+      }
+    ],
+    "createdDate": 1594596679870,
+    "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+    "loggedPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+    "fundsBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "volunteeringHoursBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "goodsStock": []
+  },
+  "identities": [
+    {
+      "fingerprint": "C6:53:99:76:CB:20:C4:8B:A3:E8:33:C2:D2:56:0C:7A:52:D6:4A:4C",
+      "status": true
+    }
+  ],
+  "createdDate": 1594685809349,
+  "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+  "loggedPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+  "fundsBalance": {
+    "type": "com.chain.solidary.model.entityBalance",
+    "debit": 0,
+    "credit": 0,
+    "balance": 0
+  },
+  "volunteeringHoursBalance": {
+    "type": "com.chain.solidary.model.entityBalance",
+    "debit": 0,
+    "credit": 0,
+    "balance": 0
+  },
+  "goodsStock": []
+} 

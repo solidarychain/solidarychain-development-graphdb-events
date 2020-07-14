@@ -50,10 +50,7 @@ export class Participant extends BaseModel {
   @Properties({ map: [{ debit: 'volunteeringHourDebit' }, { credit: 'volunteeringHourCredit' }, { balance: 'volunteeringHourBalance' }] })
   volunteeringHoursBalance: GenericBalance;
 
+  // TODO
   // @Persisted
   goodsStock: Array<Goods>;
-
-  // constructor(blockNumber: string, transactionId: string, status: string) {
-  //   super(blockNumber, transactionId, status);
-  // }
 }

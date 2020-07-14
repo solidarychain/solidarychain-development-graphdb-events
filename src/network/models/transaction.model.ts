@@ -51,5 +51,6 @@ export class Transaction extends BaseModel {
   @Persisted
   assetId: string;
 
+  // TODO
   goods?: Array<Goods>;
 }
