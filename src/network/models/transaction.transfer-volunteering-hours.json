@@ -1,0 +1,278 @@
+{
+  "id": "8e668564-2d9c-4c47-8821-f24399439aec",
+  "type": "com.chain.solidary.model.transaction",
+  "transactionType": "TRANSFER_VOLUNTEERING_HOURS",
+  "resourceType": "VOLUNTEERING_HOURS",
+  "input": {
+    "entity": {
+      "id": "4ea88521-031b-4279-9165-9c10e1839001",
+      "type": "com.chain.solidary.model.person",
+      "username": "johndoe",
+      "password": "$2b$10$rOWvozNiIEoRPd98D4c4f.v1ZDPp3jZXhFa3valFAr0X2DfKVMus.",
+      "email": "johndoe@mail.com",
+      "attributes": [
+        {
+          "certifierID": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+          "content": null,
+          "id": "birth-year",
+          "issuedDate": 1554239270
+        }
+      ],
+      "roles": [
+        "USER"
+      ],
+      "participant": {
+        "_code": "gov",
+        "_createdDate": 1594482960114,
+        "_fundsBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "_goodsStock": [],
+        "_id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+        "_identities": [
+          {
+            "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+            "status": true
+          }
+        ],
+        "_msp": "Org1MSP",
+        "_name": "Big Government",
+        "_type": "com.chain.solidary.model.participant",
+        "_volunteeringHoursBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "code": "gov",
+        "createdDate": 1594482960114,
+        "fundsBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "goodsStock": [],
+        "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+        "identities": [
+          {
+            "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+            "status": true
+          }
+        ],
+        "msp": "Org1MSP",
+        "name": "Big Government",
+        "participant": {},
+        "type": "com.chain.solidary.model.participant",
+        "volunteeringHoursBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        }
+      },
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "createdDate": 1594482980303,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "volunteeringHoursBalance": {
+        "balance": -1210,
+        "credit": 0,
+        "debit": 1210,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": [
+        {
+          "balance": {
+            "balance": -200,
+            "credit": 0,
+            "debit": 200,
+            "type": "com.chain.solidary.model.entityBalance"
+          },
+          "barCode": "ean008",
+          "code": "008",
+          "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+          "createdDate": 1594483054887,
+          "description": "description008",
+          "id": "80450045-d20d-4cdd-b937-c9bb46a48581",
+          "name": "name008",
+          "type": "com.chain.solidary.model.goods"
+        },
+        {
+          "balance": {
+            "balance": -900,
+            "credit": 0,
+            "debit": 900,
+            "type": "com.chain.solidary.model.entityBalance"
+          },
+          "barCode": "ean009",
+          "code": "009",
+          "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+          "createdDate": 1594483054889,
+          "description": "description009",
+          "id": "80450045-d20d-4cdd-b937-c9bb46a48582",
+          "name": "name009",
+          "type": "com.chain.solidary.model.goods"
+        },
+        {
+          "balance": {
+            "balance": 19.5,
+            "credit": 19.5,
+            "debit": 0,
+            "type": "com.chain.solidary.model.entityBalance"
+          },
+          "barCode": "ean010",
+          "code": "010",
+          "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1838010",
+          "createdDate": 1594483073189,
+          "description": "description010",
+          "id": "80450045-d20d-4cdd-b937-c9bb46a48581",
+          "name": "name010",
+          "type": "com.chain.solidary.model.goods"
+        },
+        {
+          "balance": {
+            "balance": 21.11,
+            "credit": 21.11,
+            "debit": 0,
+            "type": "com.chain.solidary.model.entityBalance"
+          },
+          "barCode": "ean011",
+          "code": "011",
+          "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1838010",
+          "createdDate": 1594483073190,
+          "description": "description011",
+          "id": "80450045-d20d-4cdd-b937-c9bb46a48582",
+          "name": "name011",
+          "type": "com.chain.solidary.model.goods"
+        }
+      ],
+      "registrationDate": 1594482980303,
+      "firstname": "John",
+      "lastname": "Doe",
+      "gender": "M",
+      "height": "1.81",
+      "fatherFirstname": "Alberto",
+      "fatherLastname": "De Andrade Monteiro",
+      "motherFirstname": "Maria Da Graça De Oliveira Mendes",
+      "motherLastname": "Monteiro",
+      "birthDate": 61985472,
+      "nationality": "PRT",
+      "country": "PRT",
+      "documentNumber": "09879462 0 ZZ3",
+      "documentType": "Cartão De Cidadão",
+      "cardVersion": "006.007.23",
+      "emissionDate": 61985472,
+      "expirationDate": 61985472,
+      "emittingEntity": "República Portuguesa",
+      "identityNumber": "098794620",
+      "fiscalNumber": "182692124",
+      "socialSecurityNumber": "11103478242",
+      "beneficiaryNumber": "285191659",
+      "pan": "0000036014662658",
+      "requestLocation": "CRCiv. Figueira da Foz",
+      "otherInformation": ""
+    }
+  },
+  "output": {
+    "entity": {
+      "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+      "type": "com.chain.solidary.model.participant",
+      "code": "gov",
+      "name": "Big Government",
+      "msp": "Org1MSP",
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "createdDate": 1594482960114,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "volunteeringHoursBalance": {
+        "balance": 1200,
+        "credit": 1200,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": []
+    }
+  },
+  "quantity": 1200,
+  "createdDate": 1594679386818,
+  "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+  "participant": {
+    "id": "0192a411-75c6-4b70-b456-141cad74b0fc",
+    "type": "com.chain.solidary.model.participant",
+    "code": "part85",
+    "name": "Part85",
+    "msp": "Org1MSP",
+    "participant": {
+      "code": "gov",
+      "createdDate": 1594482960114,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": [],
+      "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "msp": "Org1MSP",
+      "name": "Big Government",
+      "type": "com.chain.solidary.model.participant",
+      "volunteeringHoursBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      }
+    },
+    "identities": [
+      {
+        "fingerprint": "C6:53:99:76:CB:20:C4:8B:A3:E8:33:C2:D2:56:0C:7A:52:D6:4A:4C",
+        "status": true
+      }
+    ],
+    "createdDate": 1594596679870,
+    "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+    "loggedPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+    "fundsBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "volunteeringHoursBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "goodsStock": []
+  },
+  "loggedPersonId": "4ea88521-031b-4279-9165-9c10e1839001"
+} 

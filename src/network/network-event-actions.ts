@@ -5,6 +5,7 @@ import { getEnumKeyFromEnumValue } from 'src/main.util';
 import { Neo4jService } from "src/neo4j/neo4j.service";
 import { Participant } from './models/participant.model';
 import { ChaincodeEvent } from "./network.enums";
+import { Transaction } from './models';
 
 // type ChaincodeEventFunction = (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => any;
 
@@ -68,7 +69,7 @@ export class ChaincodeEventActions {
       //convert event to something we can parse 
       let payload = (event as any).payload.toString();
       payload = JSON.parse((payload as any))
-      Logger.debug(`Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
+      // Logger.debug(`Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
       Logger.debug(`${eventName}: ${JSON.stringify(payload, undefined, 2)}`);
       // delegateEvent
       this.delegateChaincodeEvent(eventEnum, payload, event, blockNumber, transactionId, status);
@@ -161,7 +162,6 @@ export class ChaincodeEventActions {
   }
 
   private chaincodeEventActionParticipantCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
-    // Logger.warn(`implement stub for chaincodeEventActionParticipantCreatedEvent`);
     let participant: Participant = new Participant(blockNumber, transactionId, status);
     // assign object
     Object.assign(participant, payload);
@@ -206,7 +206,10 @@ export class ChaincodeEventActions {
   }
 
   private chaincodeEventActionTransactionCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
-    Logger.warn(`implement stub for chaincodeEventActionTransactionCreatedEvent`);
+    let transaction: Transaction = new Transaction(blockNumber, transactionId, status);
+    // assign object
+    Object.assign(transaction, payload);
+    transaction.save(this.neo4jService);
   }
 
   private chaincodeEventActionTransactionUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {

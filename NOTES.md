@@ -2,7 +2,7 @@
 
 ## TLDR
 
-project use `node/v10.12.0` version
+project use `node/v10.12.0` version, else `fs-extra/lib/mkdirs/make-dir.js:86`
 
 ## Links
 

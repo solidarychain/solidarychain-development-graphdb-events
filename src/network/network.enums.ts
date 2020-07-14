@@ -4,6 +4,27 @@
  * solidarychain-development-monorepo/packages/common-cc/src/enums.ts
  */
 
+export enum TransactionType {
+  TransferFunds = 'TRANSFER_FUNDS',
+  TransferVolunteeringHours = 'TRANSFER_VOLUNTEERING_HOURS',
+  TransferGoods = 'TRANSFER_GOODS',
+  TransferAsset = 'TRANSFER_ASSET',
+}
+
+export enum ResourceType {
+  Funds = 'FUNDS',
+  VolunteeringHours = 'VOLUNTEERING_HOURS',
+  GenericGoods = 'GENERIC_GOODS',
+  PhysicalAsset = 'PHYSICAL_ASSET',
+  DigitalAsset = 'DIGITAL_ASSET',
+}
+
+export enum EntityType {
+  Participant = 'com.chain.solidary.model.participant',
+  Person = 'com.chain.solidary.model.person',
+  Cause = 'com.chain.solidary.model.cause',
+}
+
 export enum ChaincodeEvent {
   // Asset
   AssetCreatedEvent = "AssetCreatedEvent",

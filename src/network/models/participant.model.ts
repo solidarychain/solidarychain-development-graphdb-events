@@ -1,18 +1,19 @@
-import { Logger } from '@nestjs/common';
-import { BaseModel, Persisted, Properties } from "./base.model";
+import { Persisted, Properties } from "../decorators";
+import { BaseModel } from "./base.model";
 import { GenericBalance } from "./classes/generic-balance";
 import { Goods } from "./goods.model";
-import { Neo4jService } from 'src/neo4j/neo4j.service';
 
 export class Participant extends BaseModel {
   @Persisted
-  @Properties({ query: 'MATCH', fieldName: 'codeModified' })
+  @Properties({ returnField: true })
   code: string;
 
   @Persisted
+  @Properties({ returnField: true })
   name: string;
 
   @Persisted
+  @Properties({ returnField: true })
   email: string;
 
   @Persisted
@@ -21,7 +22,9 @@ export class Participant extends BaseModel {
   @Persisted
   msp: string;
 
-  participant: any;
+  @Persisted
+  @Properties({ map: [{ id: 'participantId' }] })
+  participant: Participant;
 
   identities: Array<any>;
 
@@ -40,15 +43,17 @@ export class Participant extends BaseModel {
   loggedPersonId?: string;
 
   @Persisted
+  @Properties({ map: [{ debit: 'fundsBalanceDebit' }, { credit: 'fundsBalanceCredit' }, { balance: 'fundsBalanceBalance' }] })
   fundsBalance: GenericBalance;
 
   @Persisted
+  @Properties({ map: [{ debit: 'volunteeringHourDebit' }, { credit: 'volunteeringHourCredit' }, { balance: 'volunteeringHourBalance' }] })
   volunteeringHoursBalance: GenericBalance;
 
-  @Persisted
+  // @Persisted
   goodsStock: Array<Goods>;
 
-  constructor(blockNumber: string, transactionId: string, status: string) {
-    super(blockNumber, transactionId, status);
-  }
+  // constructor(blockNumber: string, transactionId: string, status: string) {
+  //   super(blockNumber, transactionId, status);
+  // }
 }
