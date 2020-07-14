@@ -1,0 +1,127 @@
+{
+  "id": "30d8f217-4558-4d9a-91b5-242e50f8fb03",
+  "type": "com.chain.solidary.model.asset",
+  "name": "Bmw F650 CS [30d8f217]",
+  "assetType": "PHYSICAL_ASSET",
+  "owner": {
+    "entity": {
+      "id": "f8596b03-492d-4d46-b54e-c4a70a037aa5",
+      "type": "com.chain.solidary.model.participant",
+      "code": "bad",
+      "name": "Bad Bank",
+      "msp": "Org1MSP",
+      "participant": {
+        "code": "gov",
+        "createdDate": 1594482960114,
+        "fundsBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        },
+        "goodsStock": [],
+        "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+        "identities": [
+          {
+            "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+            "status": true
+          }
+        ],
+        "msp": "Org1MSP",
+        "name": "Big Government",
+        "type": "com.chain.solidary.model.participant",
+        "volunteeringHoursBalance": {
+          "balance": 0,
+          "credit": 0,
+          "debit": 0,
+          "type": "com.chain.solidary.model.entityBalance"
+        }
+      },
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "createdDate": 1594482972978,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "volunteeringHoursBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": []
+    }
+  },
+  "participant": {
+    "id": "0192a411-75c6-4b70-b456-141cad74b0fc",
+    "type": "com.chain.solidary.model.participant",
+    "code": "part85",
+    "name": "Part85",
+    "msp": "Org1MSP",
+    "participant": {
+      "code": "gov",
+      "createdDate": 1594482960114,
+      "fundsBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      },
+      "goodsStock": [],
+      "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+      "identities": [
+        {
+          "fingerprint": "59:2E:AB:75:6C:7B:F4:E7:75:72:AA:B1:60:50:EF:35:33:67:9D:77",
+          "status": true
+        }
+      ],
+      "msp": "Org1MSP",
+      "name": "Big Government",
+      "type": "com.chain.solidary.model.participant",
+      "volunteeringHoursBalance": {
+        "balance": 0,
+        "credit": 0,
+        "debit": 0,
+        "type": "com.chain.solidary.model.entityBalance"
+      }
+    },
+    "identities": [
+      {
+        "fingerprint": "C6:53:99:76:CB:20:C4:8B:A3:E8:33:C2:D2:56:0C:7A:52:D6:4A:4C",
+        "status": true
+      }
+    ],
+    "createdDate": 1594596679870,
+    "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+    "loggedPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+    "fundsBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "volunteeringHoursBalance": {
+      "balance": 0,
+      "credit": 0,
+      "debit": 0,
+      "type": "com.chain.solidary.model.entityBalance"
+    },
+    "goodsStock": []
+  },
+  "identities": [
+    {
+      "fingerprint": "C6:53:99:76:CB:20:C4:8B:A3:E8:33:C2:D2:56:0C:7A:52:D6:4A:4C",
+      "status": true
+    }
+  ],
+  "createdDate": 1594761856110,
+  "createdByPersonId": "4ea88521-031b-4279-9165-9c10e1839001",
+  "loggedPersonId": "4ea88521-031b-4279-9165-9c10e1839001"
+}

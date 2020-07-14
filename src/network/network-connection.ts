@@ -13,7 +13,6 @@ export class NetworkConnection {
   private network: Network;
   private contract: Contract;
   private chaincodeEventActions: ChaincodeEventActions;
-  // private events: Record<ChaincodeEvent, EventFunction>;
 
   constructor(private readonly config: NetworkConfig, private readonly neo4jService: Neo4jService) {
     this.init();
@@ -51,8 +50,19 @@ export class NetworkConnection {
     this.chaincodeEventActions = new ChaincodeEventActions(this.contract, this.neo4jService);
   }
 
+  /**
+   * get Peer Identity
+   */
   getPeerIdentity() {
     return this.peerIdentity;
+  }
+
+  /**
+   * Disconnect from the gateway.
+   */
+  disconnectGateway() {
+    this.gateway.disconnect();
+    Logger.log(`disconnected from network`);
   }
 
   /**

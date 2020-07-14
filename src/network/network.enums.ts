@@ -25,6 +25,11 @@ export enum EntityType {
   Cause = 'com.chain.solidary.model.cause',
 }
 
+export enum AssetType {
+  PhysicalAsset = 'PHYSICAL_ASSET',
+  DigitalAsset = 'DIGITAL_ASSET',
+}
+
 export enum ChaincodeEvent {
   // Asset
   AssetCreatedEvent = "AssetCreatedEvent",

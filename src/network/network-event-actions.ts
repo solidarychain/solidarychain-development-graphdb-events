@@ -3,7 +3,7 @@ import * as Client from 'fabric-client';
 import { Contract } from 'fabric-network';
 import { getEnumKeyFromEnumValue } from 'src/main.util';
 import { Neo4jService } from "src/neo4j/neo4j.service";
-import { Transaction, Cause } from './models';
+import { Transaction, Cause, Person, Asset } from './models';
 import { Participant } from './models/participant.model';
 import { ChaincodeEvent } from "./network.enums";
 
@@ -18,47 +18,7 @@ export class ChaincodeEventActions {
     this.addContractListener();
   }
 
-  // private chaincodeEventActionMap = new Map<ChaincodeEvent, ChaincodeEventFunction>([
-  //   // Asset
-  //   [ChaincodeEvent.AssetCreatedEvent, this.chaincodeEventActionAssetCreatedEvent],
-  //   [ChaincodeEvent.AssetUpdatedEvent, this.chaincodeEventActionAssetUpdatedEvent],
-  //   [ChaincodeEvent.CauseCreatedEvent, this.chaincodeEventActionCauseCreatedEvent],
-  //   [ChaincodeEvent.CauseUpdatedEvent, this.chaincodeEventActionCauseUpdatedEvent],
-  //   // Participant
-  //   [ChaincodeEvent.ParticipantCreatedEvent, this.chaincodeEventActionParticipantCreatedEvent],
-  //   [ChaincodeEvent.ParticipantUpdatedEvent, this.chaincodeEventActionParticipantUpdatedEvent],
-  //   [ChaincodeEvent.ParticipantChangeIdentityEvent, this.chaincodeEventActionParticipantChangeIdentityEvent],
-  //   // Person
-  //   [ChaincodeEvent.PersonCreatedEvent, this.chaincodeEventActionPersonCreatedEvent],
-  //   [ChaincodeEvent.PersonUpdatedEvent, this.chaincodeEventActionPersonUpdatedEvent],
-  //   [ChaincodeEvent.PersonUpdatePasswordEvent, this.chaincodeEventActionPersonUpdatePasswordEvent],
-  //   [ChaincodeEvent.PersonUpdateProfileEvent, this.chaincodeEventActionPersonUpdateProfileEvent],
-  //   [ChaincodeEvent.PersonUpdateRolesEvent, this.chaincodeEventActionPersonUpdateRolesEvent],
-  //   [ChaincodeEvent.PersonUpsertCitizenCardEvent, this.chaincodeEventActionPersonUpsertCitizenCardEvent],
-  //   [ChaincodeEvent.PersonAddAttributeEvent, this.chaincodeEventActionPersonAddAttributeEvent],
-  //   // Transaction
-  //   [ChaincodeEvent.TransactionCreatedEvent, this.chaincodeEventActionTransactionCreatedEvent],
-  //   [ChaincodeEvent.TransactionUpdatedEvent, this.chaincodeEventActionTransactionUpdatedEvent],
-  //   [ChaincodeEvent.TransactionAssetChangeOwnerEvent, this.chaincodeEventActionTransactionAssetChangeOwnerEvent],
-  // ]);
-
   private async addContractListener() {
-    // debugger;
-    // this.chaincodeEventActionMap.forEach(async (v: ChaincodeEventFunction, k: ChaincodeEvent) => {
-    //   Logger.debug(`add chaincodeEvent: ${k}, delegate to ${v.name}`);
-    //   await this.contract.addContractListener(`contract-listener-${k.toLowerCase()}`, k.toString(), (error, event, blockNumber, transactionId, status) => {
-    //     v(error, event, blockNumber, transactionId, status);
-    //   });
-    // });
-
-    // await this.contract.addContractListener(`contract-listener-${'AssetCreatedEvent'.toLowerCase()}`, ChaincodeEvent.AssetCreatedEvent.toString(), (error, event, blockNumber, transactionId, status) => {
-    //   this.chaincodeEventActionParticipantCreatedEvent(payload, event, blockNumber, transactionId, status);
-    // });
-
-    // await this.contract.addContractListener(`contract-listener-${'ParticipantCreatedEvent'.toLowerCase()}`, ChaincodeEvent.ParticipantCreatedEvent.toString(), (error, event, blockNumber, transactionId, status) => {
-    //   this.chaincodeEventActionParticipantCreatedEvent(payload, event, blockNumber, transactionId, status);
-    // });
-
     await this.contract.addContractListener('contract-listener', '(.*?)', (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => {
       if (error) {
         Logger.error(error);
@@ -146,7 +106,8 @@ export class ChaincodeEventActions {
   }
 
   private chaincodeEventActionAssetCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
-    Logger.warn(`implement stub for chaincodeEventActionAssetCreatedEvent`);
+    const asset: Asset = new Asset(payload, blockNumber, transactionId, status);
+    asset.save(this.neo4jService);
   }
 
   private chaincodeEventActionAssetUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
@@ -176,7 +137,8 @@ export class ChaincodeEventActions {
   }
 
   private chaincodeEventActionPersonCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
-    Logger.warn(`implement stub for chaincodeEventActionPersonCreatedEvent`);
+    const person: Person = new Person(payload, blockNumber, transactionId, status);
+    person.save(this.neo4jService);
   }
 
   private chaincodeEventActionPersonUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
