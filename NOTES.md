@@ -160,3 +160,11 @@ nest g s
 > I had the same issue using node 8.10.0, After upgrading my node version to 10.13.0 the error was gone
 
 > use `node/v10.12.0` or greater, there is no need to use `node/v8.16.0`, this is not a convector project
+
+## Error: Unable to initialize channel. Attempted to contact 1 Peers
+
+```shell
+node:27684) UnhandledPromiseRejectionWarning: Error: Unable to initialize channel. Attempted to contact 1 Peers. Last error was Error: Channel:channelall Discovery error:access denied
+```
+
+using unsync wallets, use `solidarychain-development-graphdb-events/network/bringProductionNetworkFiles.sh`
