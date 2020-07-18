@@ -10,3 +10,8 @@ export interface Entity {
   type: EntityType;
   entity: Participant | Person | Cause;
 };
+
+export type WriteTransaction = {
+  cypher: string;
+  params?: any;
+}

@@ -167,4 +167,4 @@ nest g s
 node:27684) UnhandledPromiseRejectionWarning: Error: Unable to initialize channel. Attempted to contact 1 Peers. Last error was Error: Channel:channelall Discovery error:access denied
 ```
 
-using unsync wallets, use `solidarychain-development-graphdb-events/network/bringProductionNetworkFiles.sh`
+using unsync wallets, use `solidarychain-development-graphdb-events/network/bringWalletFiles.sh`

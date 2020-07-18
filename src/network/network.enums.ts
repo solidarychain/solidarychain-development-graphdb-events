@@ -30,6 +30,28 @@ export enum AssetType {
   DigitalAsset = 'DIGITAL_ASSET',
 }
 
+export enum ModelTypeKey {
+  Participant = 'Participant',
+  Person = 'Person',
+  Cause = 'Cause',
+  Asset = 'Asset',
+  Transaction = 'Transaction',
+  Goods = 'Goods',
+}
+
+export enum ModelType {
+  Participant = 'com.chain.solidary.model.participant',
+  Person = 'com.chain.solidary.model.person',
+  Cause = 'com.chain.solidary.model.cause',
+  Asset = 'com.chain.solidary.model.asset',
+  Transaction = 'com.chain.solidary.model.transaction',
+  Goods = 'com.chain.solidary.model.goods',
+}
+
+export enum GraphLabel {
+  TRANSACTED_TO = 'TRANSACTED_TO',
+}
+
 export enum ChaincodeEvent {
   // Asset
   AssetCreatedEvent = "AssetCreatedEvent",

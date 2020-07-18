@@ -5,7 +5,8 @@ import { getEnumKeyFromEnumValue } from 'src/main.util';
 import { Neo4jService } from "src/neo4j/neo4j.service";
 import { Transaction, Cause, Person, Asset } from './models';
 import { Participant } from './models/participant.model';
-import { ChaincodeEvent } from "./network.enums";
+import { ChaincodeEvent, ModelType } from "./network.enums";
+import { WriteTransaction } from './network.types';
 
 // type ChaincodeEventFunction = (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => any;
 
@@ -168,6 +169,16 @@ export class ChaincodeEventActions {
   private chaincodeEventActionTransactionCreatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {
     const transaction: Transaction = new Transaction(payload, blockNumber, transactionId, status);
     transaction.save(this.neo4jService);
+    // const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
+    // writeTransaction.push({ cypher: transaction.getSaveCypher(), params: transaction });
+    // const inputType: ModelType = getEnumKeyFromEnumValue(ModelType, transaction.input.type);
+    // const outputType: ModelType = getEnumKeyFromEnumValue(ModelType, transaction.output.type);
+    // const relation = `MATCH 
+    //   (a:${inputType} {inputId: $transaction.input.id}),
+    //   (b:${outputType} {outputId: $transaction.output.id})
+    //   MERGE (a)-[r:LOVES]->(b)`;
+    // writeTransaction.push({ cypher: relation, params: transaction });
+    // this.neo4jService.writeTransaction(writeTransaction);
   }
 
   private chaincodeEventActionTransactionUpdatedEvent(payload: any, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string): any {

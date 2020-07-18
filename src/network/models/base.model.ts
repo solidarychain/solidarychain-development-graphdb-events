@@ -3,9 +3,13 @@ import { Logger } from '@nestjs/common';
 import { QueryResult } from 'neo4j-driver/types/result';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Persisted, Properties, PersistedUsingInstance, getProperties } from '../decorators';
+import { removeEmpty } from 'src/main.util';
 
 export class BaseModel {
+  public type: string;
+
   @Persisted
+  @Properties({ fieldName: 'uuid' })
   public id: string;
 
   @Persisted
@@ -27,7 +31,7 @@ export class BaseModel {
     this.status = status;
   }
 
-  private getSaveCypher(): string {
+  public getSaveCypher(): string {
     const showLog = false;
     const queryFields: string[] = [];
     const queryReturnFields: string[] = [];
@@ -78,9 +82,10 @@ export class BaseModel {
     `;
   }
 
-  async save(neo4jService: Neo4jService) {
+  async save(neo4jService: Neo4jService): Promise<any> {
     const cypher = this.getSaveCypher();
-    Logger.debug(cypher);
+    // Logger.debug(cypher);
+    // pass this as parameter object
     const result: void | QueryResult = await neo4jService.write(cypher, this)
       .catch((error) => {
         Logger.error(error);
@@ -89,5 +94,12 @@ export class BaseModel {
       return {};
     }
     return result.records;
+  }
+
+  /**
+   * return object without null/empry props
+   */
+  props() {
+    return removeEmpty(this);
   }
 }

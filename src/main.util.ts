@@ -43,3 +43,15 @@ export const getEnumValueFromEnumKey = (enumType: any, enumKey: string | number)
     throw new Error(`Invalid enum key '${enumKey}'! Valid enum key(s() are ${Object.keys(enumType)}`);
   }
 };
+
+/**
+ * ES7 / 2016 remove json empty properties recursivly
+ * @param obj
+ */
+export const removeEmpty = (obj) => {
+  Object.entries(obj).forEach(([key, val]) =>
+    (val && typeof val === 'object') && removeEmpty(val) ||
+    (val === undefined || val === null || val === '') && delete obj[key]
+  );
+  return obj;
+};
