@@ -50,6 +50,8 @@ export enum ModelType {
 
 export enum GraphLabel {
   TRANSACTED_TO = 'TRANSACTED_TO',
+  OWNERSHIP_TO = 'OWNERSHIP_TO',
+  BORROWED_TO = 'BORROWED_TO',
 }
 
 export enum ChaincodeEvent {

@@ -11,7 +11,19 @@ export interface Entity {
   entity: Participant | Person | Cause;
 };
 
+/**
+ * store array of transaction queries
+ */
 export type WriteTransaction = {
   cypher: string;
   params?: any;
+}
+
+/**
+ * store composed Decorated Properties
+ */
+export type DecoratedProperties = {
+  queryFields: string[];
+  queryReturnFields: string[];
+  queryRelationProperties: string;
 }

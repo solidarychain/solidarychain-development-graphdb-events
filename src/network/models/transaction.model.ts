@@ -14,12 +14,12 @@ export class Transaction extends BaseModel {
   @Persisted
   resourceType: ResourceType;
 
-  @Persisted
-  @Properties({ map: [{ 'entity.id': 'inputEntityId' }, { 'entity.type': 'inputEntityType' }] })
+  // @Persisted
+  // @Properties({ map: [{ 'entity.id': 'inputEntityId' }, { 'entity.type': 'inputEntityType' }] })
   input: Entity;
 
-  @Persisted
-  @Properties({ map: [{ 'entity.id': 'outputEntityId' }, { 'entity.type': 'outputEntityType' }] })
+  // @Persisted
+  // @Properties({ map: [{ 'entity.id': 'outputEntityId' }, { 'entity.type': 'outputEntityType' }] })
   output: Entity;
 
   @Persisted
@@ -56,7 +56,8 @@ export class Transaction extends BaseModel {
   // TODO
   goods?: Array<Goods>;
 
-  relationProperties: any;
+  // store relationProperties
+  relationProps: any;
 
   // overriding super class method
   async save(neo4jService: Neo4jService): Promise<any> {
@@ -75,17 +76,24 @@ export class Transaction extends BaseModel {
     //   MERGE 
     //     (b)-[:ENTITY_TO_TRANSACTION]->(a)-[:TRANSACTION_TO_ENTITY]->(c)
     //   `;
-    const props = this.getProps();
-    this.relationProperties = props.obj;
+    const { queryRelationProperties } = this.getDecoratedProperties();
+
+    // const props = this.getProps();
+    // this.relationProps = props.obj;
+
+    debugger;
     const relation = `
       MATCH 
-        (a:${inputType} {id: $input.entity.id}),
-        (b:${outputType} {id: $output.entity.id})
+        (a:${inputType} {uuid: $input.entity.id}),
+        (b:${outputType} {uuid: $output.entity.id})
       CREATE
-        (a)-[:${GraphLabel.TRANSACTED_TO} {${props.props}}]->(b)
+        (a)-[r:${GraphLabel.TRANSACTED_TO} {${queryRelationProperties}}]->(b)
+      RETURN
+        a,b,r
       `;
     // {id: $relationProperties.id, quantity: $relationProperties.quantity}
     writeTransaction.push({ cypher: relation, params: this });
+    debugger;
     const txResult = await neo4jService.writeTransaction(writeTransaction);
   }
 
@@ -118,9 +126,10 @@ export class Transaction extends BaseModel {
     const result: string[] = [];
     Object.entries(obj).forEach((e) => {
       if (e[1]) {
-        result.push(`${e[0]}: $relationProperties.${e[0]}`);
+        result.push(`${e[0]}: $relationProps.${e[0]}`);
       }
     });
+    debugger;
     return {obj, props: result.join(',')};
   }
 }
