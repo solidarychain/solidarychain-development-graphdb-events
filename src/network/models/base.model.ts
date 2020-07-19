@@ -23,6 +23,24 @@ export class BaseModel {
   @Properties({ fieldName: 'transactionStatus' })
   public status: string;
 
+  identities: Array<any>;
+
+  @Persisted
+  @Properties({ transform: (value) => JSON.stringify(value) })
+  metaData: any;
+
+  @Persisted
+  @Properties({ transform: (value) => JSON.stringify(value) })
+  metaDataInternal: any;
+
+  @Persisted
+  createdDate: number;
+
+  @Persisted
+  createdByPersonId?: string;
+
+  loggedPersonId?: string;
+
   constructor(
     payload: any, blockNumber?: string, transactionId?: string, status?: string,
   ) {
@@ -32,7 +50,7 @@ export class BaseModel {
     this.status = status;
   }
 
-  public getDecoratedProperties(): DecoratedProperties {
+  public getProperties(): DecoratedProperties {
     const showLog = false;
     const decoratedProperties: DecoratedProperties = {
       queryFields: [],
@@ -56,6 +74,10 @@ export class BaseModel {
         const fieldName = (props && props.fieldName) ? props.fieldName : k;
         const returnField = (props && props.returnField) ? props.returnField : null;
         const map: Object[] = (props && props.map) ? props.map : [];
+        const transform: Function = (props && props.transform) ? props.transform : null;
+        if (transform) {
+          this[k] = transform(this[k]);
+        }
         if (showLog) Logger.log(`k:[${k}], v:[${v}], fieldName:[${fieldName}, Persisted:[${persisted}]]`);
         // if is a mapped field
         if (map.length > 0) {
@@ -87,43 +109,12 @@ export class BaseModel {
     }
     // compose queryRelationProperties
     decoratedProperties.queryRelationProperties = decoratedProperties.queryFields.join(',');
-    // compose
+    // return final object
     return decoratedProperties;
   }
 
-  // public getRelationProps() {
-  //   const showLog = true;
-  //   const relationProps: string[] = [];
-  //   const props = Object.entries(this);
-  //   props.forEach((e) => {
-  //     const [k, v] = e;
-  //     // get persisted boolean 
-  //     const persisted = PersistedUsingInstance(this, k);
-  //     // map property
-  //     if (persisted) {
-  //       // get decorator properties object
-  //       const props = getProperties(this, k);
-  //       const fieldName = (props && props.fieldName) ? props.fieldName : k;
-  //       const map: Object[] = (props && props.map) ? props.map : [];
-  //       if (showLog) Logger.log(`k:[${k}], v:[${v}], fieldName:[${fieldName}, Persisted:[${persisted}]]`);
-  //       if (map.length > 0) {
-  //         map.forEach((p) => {
-  //           const [sourceProp, targetProp] = Object.entries(p)[0];
-  //           if (showLog) Logger.debug(`${k}.${sourceProp}=[${this[k][sourceProp]}]: mapped to ${targetProp}: $${k}.${sourceProp}`);
-  //           relationProps.push(`${targetProp}: $${k}.${sourceProp}`)
-  //         });
-  //       } else {
-  //         relationProps.push(`${fieldName}: $relationProperties.$${k}`)
-  //       }
-  //     }
-  //   });
-  //   // compose merge
-  //   return relationProps;
-  // }
-
   async save(neo4jService: Neo4jService): Promise<any> {
-    debugger;
-    const { queryFields, queryReturnFields } = this.getDecoratedProperties();
+    const { queryFields, queryReturnFields } = this.getProperties();
     // compose merge
     const cypher = `
       MERGE 
@@ -133,7 +124,6 @@ export class BaseModel {
       RETURN 
       ${queryReturnFields}
     `;
-
     // Logger.debug(cypher);
     // pass this as parameter object
     const result: void | QueryResult = await neo4jService.write(cypher, this)

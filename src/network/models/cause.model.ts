@@ -1,9 +1,9 @@
 import { Persisted, Properties } from "../decorators";
+import { Entity } from "../network.types";
 import { BaseModel } from "./base.model";
 import { GenericBalance } from "./classes/generic-balance";
-import { Goods } from "./goods.model";
-import { Entity } from "../network.types";
-import { Participant } from "./participant.model";
+import { Good } from "./good.model";
+import { Participant } from ".";
 
 export class Cause extends BaseModel {
   @Persisted
@@ -34,26 +34,6 @@ export class Cause extends BaseModel {
   input: Entity;
 
   @Persisted
-  @Properties({ map: [{ id: 'participantId' }] })
-  participant: Participant;
-
-  identities: Array<any>;
-
-  @Persisted
-  metaData: any;
-
-  @Persisted
-  metaDataInternal: any;
-
-  @Persisted
-  createdDate: number;
-
-  @Persisted
-  createdByPersonId?: string;
-
-  loggedPersonId?: string;
-
-  @Persisted
   @Properties({ map: [{ debit: 'fundsBalanceDebit' }, { credit: 'fundsBalanceCredit' }, { balance: 'fundsBalanceBalance' }] })
   fundsBalance: GenericBalance;
 
@@ -63,5 +43,10 @@ export class Cause extends BaseModel {
 
   // TODO
   // @Persisted
-  goodsStock: Array<Goods>;
+  goodsStock: Array<Good>;
+
+  // don't put in base, else we hav circular dependency problems
+  @Persisted
+  @Properties({ map: [{ id: 'participantId' }] })
+  participant: Participant;
 }

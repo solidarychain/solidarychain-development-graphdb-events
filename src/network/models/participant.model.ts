@@ -1,7 +1,7 @@
 import { Persisted, Properties } from "../decorators";
 import { BaseModel } from "./base.model";
 import { GenericBalance } from "./classes/generic-balance";
-import { Goods } from "./goods.model";
+import { Good } from "./good.model";
 
 export class Participant extends BaseModel {
   @Persisted
@@ -23,26 +23,6 @@ export class Participant extends BaseModel {
   msp: string;
 
   @Persisted
-  @Properties({ map: [{ id: 'participantId' }] })
-  participant: Participant;
-
-  identities: Array<any>;
-
-  @Persisted
-  metaData: any;
-
-  @Persisted
-  metaDataInternal: any;
-
-  @Persisted
-  createdDate: number;
-
-  @Persisted
-  createdByPersonId?: string;
-
-  loggedPersonId?: string;
-
-  @Persisted
   @Properties({ map: [{ debit: 'fundsBalanceDebit' }, { credit: 'fundsBalanceCredit' }, { balance: 'fundsBalanceBalance' }] })
   fundsBalance: GenericBalance;
 
@@ -52,5 +32,10 @@ export class Participant extends BaseModel {
 
   // TODO
   // @Persisted
-  goodsStock: Array<Goods>;
+  goodsStock: Array<Good>;
+
+  // don't put in base, else we hav circular dependency problems
+  @Persisted
+  @Properties({ map: [{ id: 'participantId' }] })
+  participant: Participant;
 }

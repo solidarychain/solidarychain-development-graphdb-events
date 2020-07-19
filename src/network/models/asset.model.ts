@@ -1,8 +1,8 @@
 import { Persisted, Properties } from "../decorators";
+import { AssetType } from "../network.enums";
 import { Entity } from "../network.types";
 import { BaseModel } from "./base.model";
 import { Participant } from "./participant.model";
-import { AssetType } from "../network.enums";
 
 export class Asset extends BaseModel {
   @Persisted
@@ -21,7 +21,6 @@ export class Asset extends BaseModel {
   @Persisted
   location: string;
 
-
   @Persisted
   tags: string[];
 
@@ -29,23 +28,8 @@ export class Asset extends BaseModel {
   @Properties({ map: [{ 'entity.id': 'inputEntityId' }, { 'entity.type': 'inputEntityType' }] })
   owner: Entity;
 
+  // don't put in base, else we hav circular dependency problems
   @Persisted
   @Properties({ map: [{ id: 'participantId' }] })
   participant: Participant;
-
-  identities: Array<any>;
-
-  @Persisted
-  metaData: any;
-
-  @Persisted
-  metaDataInternal: any;
-
-  @Persisted
-  createdDate: number;
-
-  @Persisted
-  createdByPersonId?: string;
-
-  loggedPersonId?: string;
 }
