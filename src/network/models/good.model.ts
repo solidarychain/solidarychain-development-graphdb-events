@@ -19,8 +19,9 @@ export class Good extends BaseModel {
   @Persisted
   tags: string[];
 
-  @Persisted
-  @Properties({ map: [{ debit: 'balanceDebit' }, { credit: 'balanceCredit' }, { balance: 'balanceBalance' }] })
+  // SET'ed mannually, require to SUM/Increment
+  // @Persisted
+  // @Properties({ map: [{ debit: 'balanceDebit' }, { credit: 'balanceCredit' }, { balance: 'balanceBalance' }] })
   balance?: GenericBalance;
 
   // don't put in base, else we hav circular dependency problems

@@ -23,7 +23,15 @@ export type WriteTransaction = {
  * store composed Decorated Properties
  */
 export type DecoratedProperties = {
+  // araay of strings with field: $param.prop ex "uuid: $id"...
   queryFields: string[];
+  // araay of strings with node "n"...
   queryReturnFields: string[];
+  // araay of strings with field=$param.prop ex "uuid=$id"...
+  querySetFields: string[];
+  
+  // string with composed field:$param.prop separated by comma "uuid:$id, transactionType:$transactionType..."
   queryRelationProperties: string;
+  // string with composed field=$param.prop separated by comma "uuid=$id ,transactionType=$transactionType..."
+  querySetProperties: string;
 }

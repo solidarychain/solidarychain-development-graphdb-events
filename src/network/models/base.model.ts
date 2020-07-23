@@ -55,7 +55,9 @@ export class BaseModel {
     const decoratedProperties: DecoratedProperties = {
       queryFields: [],
       queryReturnFields: [],
+      querySetFields: [],
       queryRelationProperties: '',
+      querySetProperties: '',
     };
     // temp object to save queryRelation objtec with non empty properties
     const relationObject = {};
@@ -88,13 +90,15 @@ export class BaseModel {
             const [sourceProp, targetProp] = Object.entries(p)[0];
             if (showLog) Logger.debug(`${k}.${sourceProp}=[${this[k][sourceProp]}]: mapped to ${targetProp}: $${k}.${sourceProp}`);
             if (this[k]) {
-              decoratedProperties.queryFields.push(`${targetProp}: $${k}.${sourceProp}`)
+              decoratedProperties.queryFields.push(`${targetProp}:$${k}.${sourceProp}`)
+              decoratedProperties.querySetFields.push(`n.${targetProp}=$${k}.${sourceProp}`)
               // decoratedProperties.queryRelationProperties.push(`${targetProp}: $${k}.${sourceProp}`);
             }
           });
         } else {
           if (this[k]) {
             decoratedProperties.queryFields.push(`${fieldName}: $${k}`)
+            decoratedProperties.querySetFields.push(`n.${fieldName}=$${k}`)
             // decoratedProperties.queryRelationProperties.push(`${fieldName}: $${k}`);
           }
         }
@@ -109,6 +113,7 @@ export class BaseModel {
     }
     // compose queryRelationProperties
     decoratedProperties.queryRelationProperties = decoratedProperties.queryFields.join(',');
+    decoratedProperties.querySetProperties = decoratedProperties.querySetFields.join(',');
     // return final object
     return decoratedProperties;
   }
