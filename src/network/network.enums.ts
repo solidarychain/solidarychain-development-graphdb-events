@@ -48,8 +48,11 @@ export enum ModelType {
   Goods = 'com.chain.solidary.model.goods',
 }
 
-export enum GraphLabel {
-  TRANSACTED_TO = 'TRANSACTED_TO',
+export enum GraphLabelRelationship {
+  CREATE = 'CREATE',
+  TO_ENTITY = 'TO_ENTITY',
+  HAS_GOOD = 'HAS_GOOD',
+  HAS_ASSET = 'HAS_ASSET',
   OWNERSHIP_TO = 'OWNERSHIP_TO',
   BORROWED_TO = 'BORROWED_TO',
 }

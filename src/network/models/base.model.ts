@@ -118,11 +118,9 @@ export class BaseModel {
     // compose merge
     const cypher = `
       MERGE 
-        (n:${this.constructor.name} {
-          ${queryFields}
-        })
+        (n:${this.constructor.name} { ${queryFields} })
       RETURN 
-      ${queryReturnFields}
+        ${queryReturnFields}
     `;
     // Logger.debug(cypher);
     // pass this as parameter object
