@@ -31,8 +31,6 @@ export class Person extends BaseModel {
   @Properties({ map: [{ debit: 'volunteeringHourDebit' }, { credit: 'volunteeringHourCredit' }, { balance: 'volunteeringHourBalance' }] })
   volunteeringHoursBalance: GenericBalance;
 
-  // TODO
-  // @Persisted
   goodsStock: Array<Good>;
 
   // don't put in base, else we hav circular dependency problems

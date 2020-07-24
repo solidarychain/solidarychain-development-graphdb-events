@@ -33,7 +33,6 @@ export class Transaction extends BaseModel {
   @Persisted
   assetId: string;
 
-  // TODO
   goods?: Array<Good>;
 
   // don't put in base, else we hav circular dependency problems
@@ -42,17 +41,13 @@ export class Transaction extends BaseModel {
   participant: Participant;
 
   // overriding super class method
-  // without transaction-[]->goods
-  // MATCH (a:Person)-[r1:CREATE]->(b:Transaction {uuid: $id})-[r2:TO_ENTITY]->(c:Cause)-[r3:HAS_GOOD]-(d:Good) RETURN a,b,c,d,r1,r2,r3
-  // full
-  // MATCH (a:Person)-[r1:CREATE]->(b:Transaction {uuid: $id})-[r2:HAS_GOOD]->(c:Good)<-[r3:HAS_GOOD]-(d:Cause), (b)-[r4:TO_ENTITY]->(e) RETURN a,b,c,d,e,r1,r2,r3,r4
   async save(neo4jService: Neo4jService): Promise<any> {
     // init writeTransaction
     const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { queryFields, queryReturnFields } = this.getProperties();
-    // stage#1: create transaction
     const inputType: ModelType = getEnumKeyFromEnumValue(ModelType, this.input.entity.type);
     const outputType: ModelType = getEnumKeyFromEnumValue(ModelType, this.output.entity.type);
+    // stage#1: create transaction node
     const transactionCypher = `
       MERGE 
         (n:${this.constructor.name} {
@@ -72,8 +67,7 @@ export class Transaction extends BaseModel {
         (a)-[:${GraphLabelRelationship.CREATE}]->(b)-[:${GraphLabelRelationship.TO_ENTITY}]->(c)
       `;
     writeTransaction.push({ cypher: relationCypher, params: this });
-    // stage#3: create goods
-    // merge goods
+    // stage#3: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
     if (this.goods.length > 0) {
       this.goods.forEach((e) => {
         const good = new Good(e, String(this.blockNumber), this.transactionId, this.status);
@@ -86,7 +80,7 @@ export class Transaction extends BaseModel {
           input: { entity: { id: this.input.entity.id } },
           output: { entity: { id: this.output.entity.id } },
         };
-        // merge new good on graphq, with SUM/INCREMENT balance
+        // stage#3.1: merge new good on graphq, with SUM/INCREMENT balance
         let cypher = `
           MERGE 
             (n:${good.constructor.name} {barCode: $barCode})
@@ -102,12 +96,7 @@ export class Transaction extends BaseModel {
             n.balanceBalance=(n.balanceCredit-n.balanceDebit)
         `;
         writeTransaction.push({ cypher, params });
-
-        // 2. merge good transaction to good relation (onRelation)
-
-        // 3. merge entity to good relation SUMMING quantities (onRelation)
-
-        // merge goods and create transaction and output entity relations to goods
+        // stage#3.2: create triple relation inputEntity(decrease), outputEntity(increase) and transaction(increase)
         cypher = `
           MATCH
             (a:${this.constructor.name} {uuid: $relationTransactionId}),
@@ -144,14 +133,11 @@ export class Transaction extends BaseModel {
         `.trim();
         writeTransaction.push({ cypher, params });
       });
-
-      // TODO sum quantities in output entity
-
-      // TODO when create good on graph, dont persist quantities, or sum ir like and average of amount transfered, better
-
-      // TODO: goods relation
-
+      // stage#4: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
+      
       // TODO: asset relation
+
+      // TODO: transfer amounts
     }
     const txResult = await neo4jService.writeTransaction(writeTransaction);
   }
