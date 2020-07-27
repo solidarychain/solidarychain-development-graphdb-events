@@ -24,7 +24,7 @@ export class Person extends BaseModel {
   roles: Array<String>;
 
   @Persisted
-  @Properties({ map: [{ debit: 'fundsBalanceDebit' }, { credit: 'fundsBalanceCredit' }, { balance: 'fundsBalanceBalance' }] })
+  @Properties({ map: [{ debit: 'fundsDebit' }, { credit: 'fundsCredit' }, { balance: 'fundsBalance' }] })
   fundsBalance: GenericBalance;
 
   @Persisted

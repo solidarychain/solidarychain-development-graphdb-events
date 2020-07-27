@@ -10,7 +10,7 @@ export class BaseModel {
   public type: string;
 
   @Persisted
-  @Properties({ fieldName: 'uuid' })
+  // @Properties({ fieldName: 'uuid' })
   public id: string;
 
   @Persisted

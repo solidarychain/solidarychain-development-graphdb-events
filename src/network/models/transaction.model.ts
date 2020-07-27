@@ -6,6 +6,7 @@ import { Entity, WriteTransaction } from '../network.types';
 import { BaseModel } from './base.model';
 import { Good } from './good.model';
 import { Participant } from './participant.model';
+import { Asset } from './asset.model';
 
 export class Transaction extends BaseModel {
   @Persisted
@@ -60,15 +61,48 @@ export class Transaction extends BaseModel {
     // stage#2: create relation (:Entity)-[:CREATE]->(:Transaction)-[:TO_ENTITY]->(:Entity)
     const relationCypher = `
       MATCH 
-        (a:${inputType} {uuid: $input.entity.id}),
-        (b:${this.constructor.name} {uuid: $id}),
-        (c:${outputType} {uuid: $output.entity.id})
+        (a:${inputType} {id: $input.entity.id}),
+        (b:${this.constructor.name} {id: $id}),
+        (c:${outputType} {id: $output.entity.id})
       CREATE
         (a)-[:${GraphLabelRelationship.CREATE}]->(b)-[:${GraphLabelRelationship.TO_ENTITY}]->(c)
       `;
     writeTransaction.push({ cypher: relationCypher, params: this });
-    // stage#3: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
-    if (this.goods.length > 0) {
+
+    // stage#3: TransferFunds
+    if (this.transactionType === TransactionType.TransferFunds && this.resourceType == ResourceType.Funds) {
+      const fieldPrefix = 'funds';
+      // common query for both fields funds and volunteeringHours
+      const cypher = `
+        MATCH
+          (a:${inputType} {id: $input.entity.id}),
+          (b:${outputType} {id: $output.entity.id})
+        SET
+          a.${fieldPrefix}Debit=(a.${fieldPrefix}Debit+$quantity),
+          a.${fieldPrefix}Balance=(a.${fieldPrefix}Balance-$quantity),
+          b.${fieldPrefix}Credit=(b.${fieldPrefix}Credit+$quantity),
+          b.${fieldPrefix}Balance=(b.${fieldPrefix}Balance+$quantity)
+      `.trim();
+      writeTransaction.push({ cypher, params: this });
+    }
+    // stage#4: TransferVolunteeringHours
+    if (this.transactionType === TransactionType.TransferVolunteeringHours && this.resourceType === ResourceType.VolunteeringHours) {
+      const fieldPrefix = 'volunteeringHour';
+      const cypher = `
+        MATCH
+          (a:${inputType} {id: $input.entity.id}),
+          (b:${outputType} {id: $output.entity.id})
+        SET
+          a.${fieldPrefix}Debit=(a.${fieldPrefix}Debit+$quantity),
+          a.${fieldPrefix}Balance=(a.${fieldPrefix}Balance-$quantity),
+          b.${fieldPrefix}Credit=(b.${fieldPrefix}Credit+$quantity),
+          b.${fieldPrefix}Balance=(b.${fieldPrefix}Balance+$quantity)
+      `.trim();
+      debugger;
+      writeTransaction.push({ cypher, params: this });
+    }
+    // stage#5: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
+    if (this.transactionType === TransactionType.TransferGoods && this.resourceType == ResourceType.GenericGoods && this.goods.length > 0) {
       this.goods.forEach((e) => {
         const good = new Good(e, String(this.blockNumber), this.transactionId, this.status);
         const { querySetProperties } = good.getProperties();
@@ -80,7 +114,7 @@ export class Transaction extends BaseModel {
           input: { entity: { id: this.input.entity.id } },
           output: { entity: { id: this.output.entity.id } },
         };
-        // stage#3.1: merge new good on graphq, with SUM/INCREMENT balance
+        // stage#5.1: merge new good on graphq, with SUM/INCREMENT balance
         let cypher = `
           MERGE 
             (n:${good.constructor.name} {barCode: $barCode})
@@ -96,15 +130,16 @@ export class Transaction extends BaseModel {
             n.balanceBalance=(n.balanceCredit-n.balanceDebit)
         `;
         writeTransaction.push({ cypher, params });
-        // stage#3.2: create triple relation inputEntity(decrease), outputEntity(increase) and transaction(increase)
+        // stage#5.2: create triple relation inputEntity(decrease), outputEntity(increase) and transaction(increase)
+        debugger;
         cypher = `
           MATCH
-            (a:${this.constructor.name} {uuid: $relationTransactionId}),
-            (b:${inputType} {uuid: $input.entity.id}),
-            (c:${outputType} {uuid: $output.entity.id}),
+            (a:${this.constructor.name} {id: $relationTransactionId}),
+            (b:${inputType} {id: $input.entity.id}),
+            (c:${outputType} {id: $output.entity.id}),
             (d:${good.constructor.name} {barCode: $barCode})
           MERGE  
-            (a)-[r1:${GraphLabelRelationship.HAS_GOOD}]->(d)
+            (a)-[r1:${GraphLabelRelationship.TRANSFERED_GOOD}]->(d)
             ON CREATE SET
               r1.balanceCredit=0,
               r1.balanceDebit=0,
@@ -113,7 +148,7 @@ export class Transaction extends BaseModel {
               r1.balanceCredit=(r1.balanceCredit+$balance.credit),
               r1.balanceBalance=(r1.balanceCredit-r1.balanceDebit)
           MERGE
-            (b)-[r2:${GraphLabelRelationship.HAS_GOOD}]->(d)
+            (b)-[r2:${GraphLabelRelationship.TRANSFERED_GOOD}]->(d)
             ON CREATE SET
               r2.balanceCredit=0,
               r2.balanceDebit=0,
@@ -122,7 +157,7 @@ export class Transaction extends BaseModel {
               r2.balanceDebit=(r2.balanceDebit+$balance.credit),
               r2.balanceBalance=(r2.balanceCredit-r2.balanceDebit)
           MERGE
-            (c)-[r3:${GraphLabelRelationship.HAS_GOOD}]->(d)
+            (c)-[r3:${GraphLabelRelationship.TRANSFERED_GOOD}]->(d)
             ON CREATE SET
               r3.balanceCredit=0,
               r3.balanceDebit=0,
@@ -133,11 +168,32 @@ export class Transaction extends BaseModel {
         `.trim();
         writeTransaction.push({ cypher, params });
       });
-      // stage#4: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
-      
-      // TODO: asset relation
-
-      // TODO: transfer amounts
+    }
+    // stage#6: asset transaction
+    if (this.transactionType === TransactionType.TransferAsset && this.assetId) {
+      // delete old owner relation
+      let cypher = `
+        MATCH
+          (a)-[r1:${GraphLabelRelationship.OWNS_ASSET}]->(b:${Asset.name} {id: $assetId})
+        DELETE
+          r1
+      `.trim();
+      writeTransaction.push({ cypher, params: this });
+      // create tripple relation transaction > asset, inputEntity assets and outputEntity Asset
+      cypher = `
+        MATCH
+          (a:${this.constructor.name} {id: $id}),
+          (b:${inputType} {id: $input.entity.id}),
+          (c:${outputType} {id: $output.entity.id}),
+          (d:${Asset.name} {id: $assetId})
+        CREATE
+          (a)-[:${GraphLabelRelationship.TRANSFERED_ASSET}]->(d)
+        CREATE  
+          (b)-[:${GraphLabelRelationship.TRANSFERED_ASSET}]->(d)
+        CREATE  
+          (c)-[:${GraphLabelRelationship.OWNS_ASSET}]->(d)
+      `.trim();
+      writeTransaction.push({ cypher, params: this });
     }
     const txResult = await neo4jService.writeTransaction(writeTransaction);
   }
