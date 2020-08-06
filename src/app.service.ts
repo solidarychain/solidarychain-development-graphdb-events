@@ -8,8 +8,8 @@ import { NetworkService } from './network/network.service';
 export class AppService {
   constructor(
     private readonly neo4jService: Neo4jService,
-    private readonly networkService: NetworkService
-  ) { }
+    private readonly networkService: NetworkService,
+  ) {}
 
   getHello(): string {
     return `Hello World! ${this.networkService.getConfig().chaincodeName}`;
@@ -17,8 +17,9 @@ export class AppService {
 
   async getTotalNodes(): Promise<string> {
     // console.log(this.neo4jService);
-    const result: void | QueryResult = await this.neo4jService.read('MATCH (n) RETURN count(n) as count', {})
-      .catch((error) => {
+    const result: void | QueryResult = await this.neo4jService
+      .read('MATCH (n) RETURN count(n) as count', {})
+      .catch(error => {
         Logger.error(error);
       });
     let count = 0;
@@ -43,8 +44,9 @@ export class AppService {
         m.tagline as tagline, 
         m.released as released
     `;
-    const result: void | QueryResult = await this.neo4jService.write(cypher, movieDto)
-      .catch((error) => {
+    const result: void | QueryResult = await this.neo4jService
+      .write(cypher, movieDto)
+      .catch(error => {
         Logger.error(error);
       });
     if (!result) {

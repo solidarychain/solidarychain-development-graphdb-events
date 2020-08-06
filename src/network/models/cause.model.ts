@@ -1,9 +1,9 @@
-import { Persisted, Properties } from "../decorators";
-import { Entity } from "../network.types";
-import { BaseModel } from "./base.model";
-import { GenericBalance } from "./classes/generic-balance";
-import { Good } from "./good.model";
-import { Participant } from ".";
+import { Persisted, Properties } from '../decorators';
+import { Entity } from '../network.types';
+import { BaseModel } from './base.model';
+import { GenericBalance } from './classes/generic-balance';
+import { Good } from './good.model';
+import { Participant } from '.';
 
 export class Cause extends BaseModel {
   @Persisted
@@ -30,15 +30,32 @@ export class Cause extends BaseModel {
   tags: string[];
 
   @Persisted
-  @Properties({ map: [{ 'entity.id': 'inputEntityId' }, { 'entity.type': 'inputEntityType' }] })
+  @Properties({
+    map: [
+      { 'entity.id': 'inputEntityId' },
+      { 'entity.type': 'inputEntityType' },
+    ],
+  })
   input: Entity;
 
   @Persisted
-  @Properties({ map: [{ debit: 'fundsDebit' }, { credit: 'fundsCredit' }, { balance: 'fundsBalance' }] })
+  @Properties({
+    map: [
+      { debit: 'fundsDebit' },
+      { credit: 'fundsCredit' },
+      { balance: 'fundsBalance' },
+    ],
+  })
   fundsBalance: GenericBalance;
 
   @Persisted
-  @Properties({ map: [{ debit: 'volunteeringHourDebit' }, { credit: 'volunteeringHourCredit' }, { balance: 'volunteeringHourBalance' }] })
+  @Properties({
+    map: [
+      { debit: 'volunteeringHourDebit' },
+      { credit: 'volunteeringHourCredit' },
+      { balance: 'volunteeringHourBalance' },
+    ],
+  })
   volunteeringHoursBalance: GenericBalance;
 
   goodsStock: Array<Good>;

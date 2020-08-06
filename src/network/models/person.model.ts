@@ -1,9 +1,9 @@
-import { BaseModel } from "./base.model";
-import { Persisted, Properties } from "../decorators";
-import { PersonAttribute } from "./classes/person-attribute.model";
-import { Good } from "./good.model";
-import { GenericBalance } from "./classes";
-import { Participant } from "./participant.model";
+import { BaseModel } from './base.model';
+import { Persisted, Properties } from '../decorators';
+import { PersonAttribute } from './classes/person-attribute.model';
+import { Good } from './good.model';
+import { GenericBalance } from './classes';
+import { Participant } from './participant.model';
 
 export class Person extends BaseModel {
   @Persisted
@@ -21,14 +21,26 @@ export class Person extends BaseModel {
   attributes: Array<PersonAttribute>;
 
   @Persisted
-  roles: Array<String>;
+  roles: Array<string>;
 
   @Persisted
-  @Properties({ map: [{ debit: 'fundsDebit' }, { credit: 'fundsCredit' }, { balance: 'fundsBalance' }] })
+  @Properties({
+    map: [
+      { debit: 'fundsDebit' },
+      { credit: 'fundsCredit' },
+      { balance: 'fundsBalance' },
+    ],
+  })
   fundsBalance: GenericBalance;
 
   @Persisted
-  @Properties({ map: [{ debit: 'volunteeringHourDebit' }, { credit: 'volunteeringHourCredit' }, { balance: 'volunteeringHourBalance' }] })
+  @Properties({
+    map: [
+      { debit: 'volunteeringHourDebit' },
+      { credit: 'volunteeringHourCredit' },
+      { balance: 'volunteeringHourBalance' },
+    ],
+  })
   volunteeringHoursBalance: GenericBalance;
 
   goodsStock: Array<Good>;
@@ -37,7 +49,7 @@ export class Person extends BaseModel {
   @Persisted
   @Properties({ map: [{ id: 'participantId' }] })
   participant: Participant;
-  
+
   @Persisted
   registrationDate: number;
 

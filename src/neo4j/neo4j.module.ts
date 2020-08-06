@@ -23,18 +23,14 @@ export class Neo4jModule {
         {
           provide: NEO4J_DRIVER,
           // context
-          inject: [
-            NEO4J_CONFIG,
-          ],
+          inject: [NEO4J_CONFIG],
           useFactory: async (config: Neo4jConfig): Promise<Driver> => {
             return createDriver(config);
           },
-        }
+        },
       ],
-      exports: [
-        Neo4jService,
-      ],
-    }
+      exports: [Neo4jService],
+    };
   }
 
   static forRootAsync(configProvider): DynamicModule {
@@ -45,7 +41,7 @@ export class Neo4jModule {
       providers: [
         {
           provide: NEO4J_CONFIG,
-          ...configProvider
+          ...configProvider,
         } as Provider<any>,
         {
           provide: NEO4J_DRIVER,
@@ -56,9 +52,7 @@ export class Neo4jModule {
         },
         Neo4jService,
       ],
-      exports: [
-        Neo4jService,
-      ]
-    }
+      exports: [Neo4jService],
+    };
   }
 }

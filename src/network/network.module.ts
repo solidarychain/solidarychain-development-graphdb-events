@@ -9,9 +9,8 @@ import { NetworkService } from './network.service';
 import { createNetworkConnection } from './network.util';
 
 @Module({
-  providers: [NetworkService]
+  providers: [NetworkService],
 })
-
 export class NetworkModule {
   static forRootAsync(configProvider): DynamicModule {
     return {
@@ -22,19 +21,20 @@ export class NetworkModule {
         NetworkService,
         {
           provide: NETWORK_CONFIG,
-          ...configProvider
+          ...configProvider,
         } as Provider<any>,
         {
           provide: NETWORK_CONNECTION,
           inject: [NETWORK_CONFIG, Neo4jService],
-          useFactory: async (config: NetworkConfig, neo4jService: Neo4jService): Promise<NetworkConnection> => {
+          useFactory: async (
+            config: NetworkConfig,
+            neo4jService: Neo4jService,
+          ): Promise<NetworkConnection> => {
             return createNetworkConnection(config, neo4jService);
           },
         },
       ],
-      exports: [
-        NetworkService,
-      ]
-    }
+      exports: [NetworkService],
+    };
   }
 }

@@ -21,7 +21,7 @@ import { Neo4jService } from './neo4j/neo4j.service';
         username: configService.get('NEO4J_USERNAME'),
         password: configService.get('NEO4J_PASSWORD'),
         database: configService.get('NEO4J_DATABASE'),
-      })
+      }),
     }),
     NetworkModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,14 +39,17 @@ import { Neo4jService } from './neo4j/neo4j.service';
         orderer: configService.get('NETWORK_ORDERER'),
         peerIdentity: configService.get('NETWORK_PEER_IDENTITY'),
         gatewayDiscovery: {
-          enabled: Boolean(configService.get('NETWORK_GATEWAY_DISCOVERY_ENABLED')),
-          asLocalhost: Boolean(configService.get('NETWORK_GATEWAY_DISCOVERY_AS_LOCALHOST')),
-        }
-      })
+          enabled: Boolean(
+            configService.get('NETWORK_GATEWAY_DISCOVERY_ENABLED'),
+          ),
+          asLocalhost: Boolean(
+            configService.get('NETWORK_GATEWAY_DISCOVERY_AS_LOCALHOST'),
+          ),
+        },
+      }),
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
-export class AppModule { }
+export class AppModule {}

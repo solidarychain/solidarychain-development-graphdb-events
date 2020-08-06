@@ -1,5 +1,5 @@
 /**
- * ChaincodeEvent enum must be insync with 
+ * ChaincodeEvent enum must be insync with
  * solidarychain-development-graphdb-events/src/network/network.enums.ts
  * solidarychain-development-monorepo/packages/common-cc/src/enums.ts
  */
@@ -61,24 +61,37 @@ export enum GraphLabelRelationship {
 
 export enum ChaincodeEvent {
   // Asset
-  AssetCreatedEvent = "AssetCreatedEvent",
-  AssetUpdatedEvent = "AssetUpdatedEvent",
-  CauseCreatedEvent = "CauseCreatedEvent",
-  CauseUpdatedEvent = "CauseUpdatedEvent",
+  AssetCreatedEvent = 'AssetCreatedEvent',
+  // TODO
+  AssetUpdatedEvent = 'AssetUpdatedEvent',
+  // Cause
+  CauseCreatedEvent = 'CauseCreatedEvent',
+  // TODO
+  CauseUpdatedEvent = 'CauseUpdatedEvent',
   // Participant
-  ParticipantCreatedEvent = "ParticipantCreatedEvent",
-  ParticipantUpdatedEvent = "ParticipantUpdatedEvent",
-  ParticipantChangeIdentityEvent = 'ParticipantChangeIdentityEvent',
+  ParticipantCreatedEvent = 'ParticipantCreatedEvent',
+  // TODO
+  ParticipantUpdatedEvent = 'ParticipantUpdatedEvent',
+  // NOT USED: here only for not used reference
+  // ParticipantChangeIdentityEvent = 'ParticipantChangeIdentityEvent',
   // Person
-  PersonCreatedEvent = "PersonCreatedEvent",
-  PersonUpdatedEvent = "PersonUpdatedEvent",
+  PersonCreatedEvent = 'PersonCreatedEvent',
+  // TODO
+  PersonUpdatedEvent = 'PersonUpdatedEvent',
+  // NOT USED: here only for not used reference
   PersonUpdatePasswordEvent = 'PersonUpdatePasswordEvent',
+  // TODO
   PersonUpdateProfileEvent = 'PersonUpdateProfileEvent',
-  PersonUpdateRolesEvent = 'PersonUpdateRolesEvent',
+  // NOT USED: here only for not used reference
+  // PersonUpdateRolesEvent = 'PersonUpdateRolesEvent',
+  // TODO
   PersonUpsertCitizenCardEvent = 'PersonUpsertCitizenCardEvent',
+  // TODO
   PersonAddAttributeEvent = 'PersonAddAttributeEvent',
   // Transaction
-  TransactionCreatedEvent = "TransactionCreatedEvent",
-  TransactionUpdatedEvent = "TransactionUpdatedEvent",
+  TransactionCreatedEvent = 'TransactionCreatedEvent',
+  // TODO
+  TransactionUpdatedEvent = 'TransactionUpdatedEvent',
+  // TODO: this is need for what?
   TransactionAssetChangeOwnerEvent = 'TransactionAssetChangeOwnerEvent',
 }

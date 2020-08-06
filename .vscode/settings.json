@@ -6,5 +6,6 @@
     "nestjs",
     "prebuild",
     "prestart"
-  ]
+  ],
+  "deno.enable": false
 }

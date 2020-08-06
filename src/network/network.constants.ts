@@ -1,6 +1,6 @@
 // providers
-export const NETWORK_CONFIG: string = 'NETWORK_CONFIG';
-export const NETWORK_CONNECTION: string = 'NETWORK_CONNECTION';
+export const NETWORK_CONFIG = 'NETWORK_CONFIG';
+export const NETWORK_CONNECTION = 'NETWORK_CONNECTION';
 // models
 // export const CONVECTOR_MODEL_PATH_PREFIX: string = 'com.chain.solidary.model';
 // export const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;

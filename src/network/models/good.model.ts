@@ -1,7 +1,7 @@
-import { GenericBalance } from "./classes/generic-balance";
-import { BaseModel } from "./base.model";
-import { Persisted, Properties } from "../decorators";
-import { Participant } from "./participant.model";
+import { GenericBalance } from './classes/generic-balance';
+import { BaseModel } from './base.model';
+import { Persisted, Properties } from '../decorators';
+import { Participant } from './participant.model';
 
 export class Good extends BaseModel {
   @Persisted

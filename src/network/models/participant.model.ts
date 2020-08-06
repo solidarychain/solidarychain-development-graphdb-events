@@ -1,7 +1,7 @@
-import { Persisted, Properties } from "../decorators";
-import { BaseModel } from "./base.model";
-import { GenericBalance } from "./classes/generic-balance";
-import { Good } from "./good.model";
+import { Persisted, Properties } from '../decorators';
+import { BaseModel } from './base.model';
+import { GenericBalance } from './classes/generic-balance';
+import { Good } from './good.model';
 
 export class Participant extends BaseModel {
   @Persisted
@@ -23,11 +23,23 @@ export class Participant extends BaseModel {
   msp: string;
 
   @Persisted
-  @Properties({ map: [{ debit: 'fundsDebit' }, { credit: 'fundsCredit' }, { balance: 'fundsBalance' }] })
+  @Properties({
+    map: [
+      { debit: 'fundsDebit' },
+      { credit: 'fundsCredit' },
+      { balance: 'fundsBalance' },
+    ],
+  })
   fundsBalance: GenericBalance;
 
   @Persisted
-  @Properties({ map: [{ debit: 'volunteeringHourDebit' }, { credit: 'volunteeringHourCredit' }, { balance: 'volunteeringHourBalance' }] })
+  @Properties({
+    map: [
+      { debit: 'volunteeringHourDebit' },
+      { credit: 'volunteeringHourCredit' },
+      { balance: 'volunteeringHourBalance' },
+    ],
+  })
   volunteeringHoursBalance: GenericBalance;
 
   goodsStock: Array<Good>;

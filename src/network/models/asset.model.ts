@@ -1,10 +1,11 @@
-import { Persisted, Properties } from "../decorators";
-import { AssetType, ModelType, GraphLabelRelationship } from "../network.enums";
-import { Entity, WriteTransaction } from "../network.types";
-import { BaseModel } from "./base.model";
-import { Participant } from "./participant.model";
-import { Neo4jService } from "src/neo4j/neo4j.service";
-import { getEnumKeyFromEnumValue } from "src/main.util";
+import { Persisted, Properties } from '../decorators';
+import { AssetType, ModelType, GraphLabelRelationship } from '../network.enums';
+import { Entity, WriteTransaction } from '../network.types';
+import { BaseModel } from './base.model';
+import { Participant } from './participant.model';
+import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { getEnumKeyFromEnumValue } from 'src/main.util';
+import { Logger } from '@nestjs/common';
 
 export class Asset extends BaseModel {
   @Persisted
@@ -27,7 +28,12 @@ export class Asset extends BaseModel {
   tags: string[];
 
   @Persisted
-  @Properties({ map: [{ 'entity.id': 'inputEntityId' }, { 'entity.type': 'inputEntityType' }] })
+  @Properties({
+    map: [
+      { 'entity.id': 'inputEntityId' },
+      { 'entity.type': 'inputEntityType' },
+    ],
+  })
   owner: Entity;
 
   // don't put in base, else we hav circular dependency problems
@@ -35,12 +41,20 @@ export class Asset extends BaseModel {
   @Properties({ map: [{ id: 'participantId' }] })
   participant: Participant;
 
+  // static async getEntity(neo4jService: Neo4jService, id: string): Promise<Record[]> {
+  //   const record = await super.getEntity<Asset>(neo4jService, ModelType.Asset, id);
+  //   Logger.error(record);
+  // }
+
   // overriding super class method
   async save(neo4jService: Neo4jService): Promise<any> {
     // init writeTransaction
     const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { queryFields, queryReturnFields } = this.getProperties();
-    const ownerType: ModelType = getEnumKeyFromEnumValue(ModelType, this.owner.entity.type);
+    const ownerType: ModelType = getEnumKeyFromEnumValue(
+      ModelType,
+      this.owner.entity.type,
+    );
     // stage#1: create asset and relation to owner
     const cypher = `
       MATCH

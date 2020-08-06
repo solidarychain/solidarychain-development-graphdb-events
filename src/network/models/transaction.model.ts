@@ -1,7 +1,12 @@
 import { getEnumKeyFromEnumValue } from '../../main.util';
 import { Neo4jService } from '../../neo4j/neo4j.service';
 import { Persisted, Properties } from '../decorators';
-import { GraphLabelRelationship, ModelType, ResourceType, TransactionType } from '../network.enums';
+import {
+  GraphLabelRelationship,
+  ModelType,
+  ResourceType,
+  TransactionType,
+} from '../network.enums';
 import { Entity, WriteTransaction } from '../network.types';
 import { BaseModel } from './base.model';
 import { Good } from './good.model';
@@ -46,8 +51,14 @@ export class Transaction extends BaseModel {
     // init writeTransaction
     const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { queryFields, queryReturnFields } = this.getProperties();
-    const inputType: ModelType = getEnumKeyFromEnumValue(ModelType, this.input.entity.type);
-    const outputType: ModelType = getEnumKeyFromEnumValue(ModelType, this.output.entity.type);
+    const inputType: ModelType = getEnumKeyFromEnumValue(
+      ModelType,
+      this.input.entity.type,
+    );
+    const outputType: ModelType = getEnumKeyFromEnumValue(
+      ModelType,
+      this.output.entity.type,
+    );
     // stage#1: create transaction node
     const transactionCypher = `
       MERGE 
@@ -70,7 +81,10 @@ export class Transaction extends BaseModel {
     writeTransaction.push({ cypher: relationCypher, params: this });
 
     // stage#3: TransferFunds
-    if (this.transactionType === TransactionType.TransferFunds && this.resourceType == ResourceType.Funds) {
+    if (
+      this.transactionType === TransactionType.TransferFunds &&
+      this.resourceType == ResourceType.Funds
+    ) {
       const fieldPrefix = 'funds';
       // common query for both fields funds and volunteeringHours
       const cypher = `
@@ -86,7 +100,10 @@ export class Transaction extends BaseModel {
       writeTransaction.push({ cypher, params: this });
     }
     // stage#4: TransferVolunteeringHours
-    if (this.transactionType === TransactionType.TransferVolunteeringHours && this.resourceType === ResourceType.VolunteeringHours) {
+    if (
+      this.transactionType === TransactionType.TransferVolunteeringHours &&
+      this.resourceType === ResourceType.VolunteeringHours
+    ) {
       const fieldPrefix = 'volunteeringHour';
       const cypher = `
         MATCH
@@ -102,9 +119,18 @@ export class Transaction extends BaseModel {
       writeTransaction.push({ cypher, params: this });
     }
     // stage#5: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
-    if (this.transactionType === TransactionType.TransferGoods && this.resourceType == ResourceType.GenericGoods && this.goods.length > 0) {
-      this.goods.forEach((e) => {
-        const good = new Good(e, String(this.blockNumber), this.transactionId, this.status);
+    if (
+      this.transactionType === TransactionType.TransferGoods &&
+      this.resourceType == ResourceType.GenericGoods &&
+      this.goods.length > 0
+    ) {
+      this.goods.forEach(e => {
+        const good = new Good(
+          e,
+          String(this.blockNumber[0]),
+          this.transactionId[0],
+          this.status[0],
+        );
         const { querySetProperties } = good.getProperties();
         // combine params
         const params = {
@@ -170,7 +196,10 @@ export class Transaction extends BaseModel {
       });
     }
     // stage#6: asset transaction
-    if (this.transactionType === TransactionType.TransferAsset && this.assetId) {
+    if (
+      this.transactionType === TransactionType.TransferAsset &&
+      this.assetId
+    ) {
       // delete old owner relation
       let cypher = `
         MATCH
