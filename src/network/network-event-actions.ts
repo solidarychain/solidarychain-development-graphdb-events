@@ -5,7 +5,8 @@ import { getEnumKeyFromEnumValue } from 'src/main.util';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Asset, Cause, Person, Transaction } from './models';
 import { Participant } from './models/participant.model';
-import { ChaincodeEvent, ModelType } from './network.enums';
+import { ChaincodeEvent } from './network.enums';
+import { ChaincodeEventActionArguments, ChaincodeEventActionFunction } from './network.types';
 
 // type ChaincodeEventFunction = (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => any;
 
@@ -66,334 +67,151 @@ export class ChaincodeEventActions {
     transactionId?: string,
     status?: string,
   ) {
-    switch (eventEnum) {
-      // Asset
-      case ChaincodeEvent.AssetCreatedEvent:
-        this.chaincodeEventActionAssetCreatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.AssetUpdatedEvent:
-        this.chaincodeEventActionAssetUpdatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      // Cause
-      case ChaincodeEvent.CauseCreatedEvent:
-        this.chaincodeEventActionCauseCreatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.CauseUpdatedEvent:
-        this.chaincodeEventActionCauseUpdatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      // Participant
-      case ChaincodeEvent.ParticipantCreatedEvent:
-        this.chaincodeEventActionParticipantCreatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.ParticipantUpdatedEvent:
-        this.chaincodeEventActionParticipantUpdatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      // Person
-      case ChaincodeEvent.PersonCreatedEvent:
-        this.chaincodeEventActionPersonCreatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.PersonUpdatedEvent:
-        this.chaincodeEventActionPersonUpdatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.PersonUpdatePasswordEvent:
-        this.chaincodeEventActionPersonUpdatePasswordEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.PersonUpdateProfileEvent:
-        this.chaincodeEventActionPersonUpdateProfileEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.PersonUpsertCitizenCardEvent:
-        this.chaincodeEventActionPersonUpsertCitizenCardEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.PersonAddAttributeEvent:
-        this.chaincodeEventActionPersonAddAttributeEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      // Transaction
-      case ChaincodeEvent.TransactionCreatedEvent:
-        this.chaincodeEventActionTransactionCreatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.TransactionUpdatedEvent:
-        this.chaincodeEventActionTransactionUpdatedEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      case ChaincodeEvent.TransactionAssetChangeOwnerEvent:
-        this.chaincodeEventActionTransactionAssetChangeOwnerEvent(
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
-        break;
-      default:
-        Logger.warn(`delegateChaincodeEvent: implement ${eventEnum}`);
-        break;
-    }
-  }
-
-  private chaincodeEventActionAssetCreatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    const asset: Asset = new Asset(payload, blockNumber, transactionId, status);
-    asset.save(this.neo4jService);
-  }
-
-  private async chaincodeEventActionAssetUpdatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): Promise<any> {
-    // TODO add async to all functions
-    // TODO add catch to all awaits
-    // const currentAsset = await Asset.getEntity<Asset>(this.neo4jService, ModelType.Asset, payload.id).catch((error) => {
-    //   Logger.error(error);
-    // });
-    // const updatedAsset = new Asset({ ...currentAsset, ...payload });
-    // Logger.debug(currentAsset);
-    // Logger.debug(updatedAsset);
-    // TODO: must get have this.owner.entity.type to use save
-    // const ownerType = main_util_1.getEnumKeyFromEnumValue(network_enums_1.ModelType, this.owner.entity.type);
-    // TODO chaincode update event only send payload the files taht are changed, currently send whole object
-    // let payloadPropKeys = Object.keys(payload);
-    // const index = payloadPropKeys.indexOf('id');
-    // if (index > -1) {
-    //   payloadPropKeys.splice(index, 1);
+    const eventActionArgs: ChaincodeEventActionArguments = {
+      payload,
+      event,
+      blockNumber,
+      transactionId,
+      status,
+    };
+    // dynamic function with closer bind
+    const delegateTo: ChaincodeEventActionFunction = this[`chaincodeEventAction${eventEnum}`].bind(this);
+    delegateTo(eventActionArgs);
+    // TODO: to clean up
+    // switch (eventEnum) {
+    //   // Asset
+    //   case ChaincodeEvent.AssetCreatedEvent:
+    //     this.chaincodeEventActionAssetCreatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.AssetUpdatedEvent:
+    //     this.chaincodeEventActionAssetUpdatedEvent(eventActionArgs);
+    //     break;
+    //   // Cause
+    //   case ChaincodeEvent.CauseCreatedEvent:
+    //     this.chaincodeEventActionCauseCreatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.CauseUpdatedEvent:
+    //     this.chaincodeEventActionCauseUpdatedEvent(eventActionArgs);
+    //     break;
+    //   // Participant
+    //   case ChaincodeEvent.ParticipantCreatedEvent:
+    //     this.chaincodeEventActionParticipantCreatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.ParticipantUpdatedEvent:
+    //     this.chaincodeEventActionParticipantUpdatedEvent(eventActionArgs);
+    //     break;
+    //   // Person
+    //   case ChaincodeEvent.PersonCreatedEvent:
+    //     this.chaincodeEventActionPersonCreatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.PersonUpdatedEvent:
+    //     this.chaincodeEventActionPersonUpdatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.PersonUpdatePasswordEvent:
+    //     this.chaincodeEventActionPersonUpdatePasswordEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.PersonUpdateProfileEvent:
+    //     this.chaincodeEventActionPersonUpdateProfileEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.PersonUpsertCitizenCardEvent:
+    //     this.chaincodeEventActionPersonUpsertCitizenCardEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.PersonAddAttributeEvent:
+    //     this.chaincodeEventActionPersonAddAttributeEvent(eventActionArgs);
+    //     break;
+    //   // Transaction
+    //   case ChaincodeEvent.TransactionCreatedEvent:
+    //     this.chaincodeEventActionTransactionCreatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.TransactionUpdatedEvent:
+    //     this.chaincodeEventActionTransactionUpdatedEvent(eventActionArgs);
+    //     break;
+    //   case ChaincodeEvent.TransactionAssetChangeOwnerEvent:
+    //     this.chaincodeEventActionTransactionAssetChangeOwnerEvent(eventActionArgs);
+    //     break;
+    //   default:
+    //     Logger.warn(`delegateChaincodeEvent: implement ${eventEnum}`);
+    //     break;
     // }
+  }
 
-    // TODO updates ambassador are relations to persons to
+  private async chaincodeEventActionAssetCreatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    // TODO use ChaincodeEventActionArguments in new Model
+    const asset: Asset = new Asset(payload, blockNumber, transactionId, status);
+    await asset.save(this.neo4jService).catch((error) => Logger.error(error));
+  }
 
+  private async chaincodeEventActionAssetUpdatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
     const updatedAsset = new Asset({ ...payload });
-    // fine tune what are the fields that we want to use in set update, from full chaincode model object fired in event
     const payloadPropKeys = ['ambassadors', 'tags', 'metaData', 'metaDataInternal'];
-    await updatedAsset.update(this.neo4jService, payloadPropKeys);
+    await updatedAsset.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionCauseCreatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    debugger;
+  private async chaincodeEventActionCauseCreatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    // TODO use ChaincodeEventActionArguments in new Model
     const cause: Cause = new Cause(payload, blockNumber, transactionId, status);
-    cause.save(this.neo4jService);
+    await cause.save(this.neo4jService).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionCauseUpdatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    Logger.warn(`implement stub for chaincodeEventActionCauseUpdatedEvent`);
+  private async chaincodeEventActionCauseUpdatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    const updatedCause = new Cause({ ...payload });
+    const payloadPropKeys = ['email', 'ambassadors', 'tags', 'metaData', 'metaDataInternal'];
+    await updatedCause.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionParticipantCreatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    const participant: Participant = new Participant(
-      payload,
-      blockNumber,
-      transactionId,
-      status,
-    );
-    participant.save(this.neo4jService);
+  private async chaincodeEventActionParticipantCreatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    // TODO use ChaincodeEventActionArguments in new Model
+    const participant: Participant = new Participant(payload, blockNumber, transactionId, status);
+    await participant.save(this.neo4jService).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionParticipantUpdatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    Logger.warn(
-      `implement stub for chaincodeEventActionParticipantUpdatedEvent`,
-    );
+  private async chaincodeEventActionParticipantUpdatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    // TODO require to test: check TODO `'participantUpdated' @high Unauthorized. Requester identity is not an admin`
+    const updateParticipant = new Participant({ ...payload });
+    const payloadPropKeys = ['email', 'ambassadors', 'metaData', 'metaDataInternal'];
+    await updateParticipant.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionPersonCreatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    const person: Person = new Person(
-      payload,
-      blockNumber,
-      transactionId,
-      status,
-    );
-    person.save(this.neo4jService);
+  private async chaincodeEventActionPersonCreatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    // TODO use ChaincodeEventActionArguments in new Model
+    const person: Person = new Person(payload, blockNumber, transactionId, status);
+    await person.save(this.neo4jService).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionPersonUpdatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    Logger.warn(`implement stub for chaincodeEventActionPersonUpdatedEvent`);
+  private async chaincodeEventActionPersonUpdatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    const updatePerson = new Person({ ...payload });
+    const payloadPropKeys = ['roles', 'metaDataInternal'];
+    await updatePerson.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionPersonUpdatePasswordEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    Logger.warn(
-      `implement stub for chaincodeEventActionPersonUpdatePasswordEvent`,
-    );
+  private async chaincodeEventActionPersonUpdatePasswordEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    const updatePerson = new Person({ ...payload });
+    const payloadPropKeys = ['password'];
+    await updatePerson.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionPersonUpdateProfileEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    Logger.warn(
-      `implement stub for chaincodeEventActionPersonUpdateProfileEvent`,
-    );
+  private async chaincodeEventActionPersonUpdateProfileEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    const updatePerson = new Person({ ...payload });
+    const payloadPropKeys = ['email','mobilePhone','postal','city','region','geoLocation','timezone','personalInfo','metaData'];
+    await updatePerson.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionPersonUpsertCitizenCardEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    Logger.warn(
-      `implement stub for chaincodeEventActionPersonUpsertCitizenCardEvent`,
-    );
+  private async chaincodeEventActionPersonUpsertCitizenCardEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    const updatePerson = new Person({ ...payload });
+    const payloadPropKeys = ['firstname','lastname','gender','height','fatherFirstname','fatherLastname','motherFirstname','motherLastname','birthDate','nationality','country','documentNumber','documentType','cardVersion','emissionDate','expirationDate','emittingEntity','identityNumber','fiscalNumber','socialSecurityNumber','beneficiaryNumber','pan','requestLocation','otherInformation'];
+    await updatePerson.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
-  private chaincodeEventActionPersonAddAttributeEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
+  private async chaincodeEventActionPersonAddAttributeEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
     Logger.warn(
       `implement stub for chaincodeEventActionPersonAddAttributeEvent`,
     );
   }
 
-  private chaincodeEventActionTransactionCreatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
-    const transaction: Transaction = new Transaction(
-      payload,
-      blockNumber,
-      transactionId,
-      status,
-    );
-    transaction.save(this.neo4jService);
+  private async chaincodeEventActionTransactionCreatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
+    // TODO use ChaincodeEventActionArguments in new Model
+    const transaction: Transaction = new Transaction(payload, blockNumber, transactionId, status);
+    await transaction.save(this.neo4jService).catch((error) => Logger.error(error));
     // const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     // writeTransaction.push({ cypher: transaction.getSaveCypher(), params: transaction });
     // const inputType: ModelType = getEnumKeyFromEnumValue(ModelType, transaction.input.type);
@@ -406,25 +224,13 @@ export class ChaincodeEventActions {
     // this.neo4jService.writeTransaction(writeTransaction);
   }
 
-  private chaincodeEventActionTransactionUpdatedEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
+  private async chaincodeEventActionTransactionUpdatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
     Logger.warn(
       `implement stub for chaincodeEventActionTransactionUpdatedEvent`,
     );
   }
 
-  private chaincodeEventActionTransactionAssetChangeOwnerEvent(
-    payload: any,
-    event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ): any {
+  private async chaincodeEventActionTransactionAssetChangeOwnerEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
     Logger.warn(
       `implement stub for chaincodeEventActionTransactionAssetChangeOwnerEvent`,
     );

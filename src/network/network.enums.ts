@@ -72,7 +72,7 @@ export enum ChaincodeEvent {
   ParticipantCreatedEvent = 'ParticipantCreatedEvent',
   // TODO
   ParticipantUpdatedEvent = 'ParticipantUpdatedEvent',
-  // NOT USED: here only for not used reference
+  // NOT USED: here only for not used reference, this is a admin function used to change participants fingerprint identity
   // ParticipantChangeIdentityEvent = 'ParticipantChangeIdentityEvent',
   // Person
   PersonCreatedEvent = 'PersonCreatedEvent',
