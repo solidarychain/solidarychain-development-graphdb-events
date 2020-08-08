@@ -199,13 +199,13 @@ export class ChaincodeEventActions {
   private async chaincodeEventActionPersonUpsertCitizenCardEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
     const updatePerson = new Person({ ...payload });
     const payloadPropKeys = ['firstname','lastname','gender','height','fatherFirstname','fatherLastname','motherFirstname','motherLastname','birthDate','nationality','country','documentNumber','documentType','cardVersion','emissionDate','expirationDate','emittingEntity','identityNumber','fiscalNumber','socialSecurityNumber','beneficiaryNumber','pan','requestLocation','otherInformation'];
-    await updatePerson.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
+    await updatePerson.update(this.neo4jService, payloadPropKeys, Person.name).catch((error) => Logger.error(error));
   }
 
   private async chaincodeEventActionPersonAddAttributeEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
-    Logger.warn(
-      `implement stub for chaincodeEventActionPersonAddAttributeEvent`,
-    );
+    const updatePerson = new Person({ ...payload });
+    const payloadPropKeys = ['attributes'];
+    await updatePerson.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
   private async chaincodeEventActionTransactionCreatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
@@ -225,14 +225,14 @@ export class ChaincodeEventActions {
   }
 
   private async chaincodeEventActionTransactionUpdatedEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
-    Logger.warn(
-      `implement stub for chaincodeEventActionTransactionUpdatedEvent`,
-    );
+    const updateTransaction = new Transaction({ ...payload });
+    const payloadPropKeys = ['metaDataInternal'];
+    await updateTransaction.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 
   private async chaincodeEventActionTransactionAssetChangeOwnerEvent({ payload, event, blockNumber, transactionId, status }: ChaincodeEventActionArguments): Promise<any> {
-    Logger.warn(
-      `implement stub for chaincodeEventActionTransactionAssetChangeOwnerEvent`,
-    );
+    const updateTransaction = new Transaction({ ...payload });
+    const payloadPropKeys = ['metaDataInternal'];
+    await updateTransaction.update(this.neo4jService, payloadPropKeys).catch((error) => Logger.error(error));
   }
 }

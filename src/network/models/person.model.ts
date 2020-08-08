@@ -18,6 +18,8 @@ export class Person extends BaseModel {
   email: string;
 
   @Persisted
+  // under test
+  @Properties({ transform: value => JSON.stringify(value) })
   attributes: Array<PersonAttribute>;
 
   @Persisted

@@ -70,7 +70,7 @@ export class BaseModel {
    */
   public static async getEntity<T extends BaseModel>(neo4jService: Neo4jService, modelType: ModelType, id: string) {
     const label: ModelType = getEnumKeyFromEnumValue(ModelType, modelType);
-    // compose merge
+    // compose cypher query
     const cypher = `MATCH (n:${label} { id: $id }) RETURN n`;
     // Logger.debug(cypher);
     // pass this as parameter object
@@ -178,8 +178,7 @@ export class BaseModel {
     return decoratedProperties;
   }
 
-  // TODO: replace <any> with generic type
-  async save(neo4jService: Neo4jService): Promise<any> {
+  async save(neo4jService: Neo4jService): Promise<void | QueryResult> {
     const { queryFields, queryReturnFields } = this.getProperties();
     // compose merge
     const cypher = `
@@ -195,29 +194,27 @@ export class BaseModel {
       .catch(error => {
         Logger.error(error);
       });
-    if (!result) {
-      return {};
-    }
-    return result.records;
+    return result;
   }
 
-  // TODO: replace <any> with generic type
-  async update(neo4jService: Neo4jService, payloadPropKeys: string[]): Promise<any> {
+  /**
+   * update
+   * @param neo4jService 
+   * @param payloadPropKeys keys used to compose set fields:values
+   * @param label only used with upserts, to add label in merge
+   */
+  async update(neo4jService: Neo4jService, payloadPropKeys: string[], label: string = ''): Promise<void | QueryResult> {
     const { querySetFields, queryReturnFields } = this.getProperties(payloadPropKeys);
-    // const queryUpdateSetFields = querySetFields.filter((e) => {
-    //   payloadPropKeys.forEach((p) => {
-    //     return e.startsWith(`n.${p}`);
-    //   });
-    // }).join(',');
-    // compose merge
+    label = (label) ? `:${label}` : '';
+    // compose cypher query
     const cypher = `
-        MATCH
-          (n {id: $id})
-        SET 
-          ${querySetFields}
-        RETURN 
-          ${queryReturnFields}
-      `;
+      MERGE
+        (n${label} {id: $id})
+      SET
+        ${querySetFields}
+      RETURN 
+        ${queryReturnFields}
+    `;
     // Logger.debug(cypher);
     // pass this as parameter object
     const result: void | QueryResult = await neo4jService
@@ -225,10 +222,7 @@ export class BaseModel {
       .catch(error => {
         Logger.error(error);
       });
-    if (!result) {
-      return {};
-    }
-    return result.records;
+    return result;
   }
 
   /**
