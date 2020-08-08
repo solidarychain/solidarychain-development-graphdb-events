@@ -10,7 +10,8 @@ import {
 } from '../decorators';
 import { removeEmpty, getEnumKeyFromEnumValue } from 'src/main.util';
 import { DecoratedProperties } from '../network.types';
-import { ModelType } from '../network.enums';
+import { ModelType, ChaincodeEvent } from '../network.enums';
+import { ChaincodeEventActionArguments } from '../network.types';
 
 export class BaseModel {
   public type: string;
@@ -28,6 +29,10 @@ export class BaseModel {
   @Persisted
   @Properties({ fieldName: 'transactionStatus' })
   public status: string[];
+
+  @Persisted
+  @Properties({ fieldName: 'transactionEvent' })
+  public event: string[];
 
   identities: Array<any>;
 
@@ -47,28 +52,43 @@ export class BaseModel {
 
   loggedPersonId?: string;
 
-  constructor(
-    payload: any,
-    blockNumber?: string,
-    transactionId?: string,
-    status?: string,
-  ) {
+  // constructor(
+  //   payload: any,
+  //   blockNumber?: string,
+  //   transactionId?: string,
+  //   status?: string,
+  // ) {
+  constructor({ payload, blockNumber, transactionId, status, event }: ChaincodeEventActionArguments) {
     Object.assign(this, payload);
     // init arrays
     this.blockNumber = [];
     this.transactionId = [];
     this.status = [];
+    this.event = [];
     // push to arrays
     this.blockNumber.push(Number(blockNumber));
     this.transactionId.push(transactionId);
     this.status.push(status);
+    const eventName = (event as any).event_name;
+    const eventEnum: ChaincodeEvent = getEnumKeyFromEnumValue(
+      ChaincodeEvent,
+      eventName,
+    );
+    this.event.push(eventEnum);
+  }
+
+  /**
+   * return object without null/empry props
+   */
+  props() {
+    return removeEmpty(this);
   }
 
   /**
    * static function to get model id
    * @param id model id/uuid
    */
-  public static async getEntity<T extends BaseModel>(neo4jService: Neo4jService, modelType: ModelType, id: string) {
+  static async getEntity<T extends BaseModel>(neo4jService: Neo4jService, modelType: ModelType, id: string) {
     const label: ModelType = getEnumKeyFromEnumValue(ModelType, modelType);
     // compose cypher query
     const cypher = `MATCH (n:${label} { id: $id }) RETURN n`;
@@ -90,7 +110,7 @@ export class BaseModel {
    * get decorator Properties
    * @param payloadPropKeys the update payload object keys to use in set / querySetFields / querySetProperties
    */
-  public getProperties(payloadPropKeys: string[] = []): DecoratedProperties {
+  getProperties(payloadPropKeys: string[] = []): DecoratedProperties {
     const showLog = false;
     const decoratedProperties: DecoratedProperties = {
       queryFields: [],
@@ -171,6 +191,11 @@ export class BaseModel {
     if (decoratedProperties.queryReturnFields.length === 0) {
       decoratedProperties.queryReturnFields.push('n');
     }
+    // add transaction props
+    decoratedProperties.querySetFields.push('n.blockNumber=n.blockNumber+$blockNumber[0]');
+    decoratedProperties.querySetFields.push('n.transactionId=n.transactionId+$transactionId[0]');
+    decoratedProperties.querySetFields.push('n.transactionStatus=n.transactionStatus+$status[0]');
+    decoratedProperties.querySetFields.push('n.transactionEvent=n.transactionEvent+$event[0]');
     // compose queryRelationProperties
     decoratedProperties.queryRelationProperties = decoratedProperties.queryFields.join(',');
     decoratedProperties.querySetProperties = decoratedProperties.querySetFields.join(',');
@@ -184,6 +209,11 @@ export class BaseModel {
     const cypher = `
       MERGE 
         (n:${this.constructor.name} { ${queryFields} })
+      ON CREATE SET
+        n.blockNumber=[],
+        n.transactionId=[],
+        n.transactionStatus=[],
+        n.transactionEvent=[]
       RETURN 
         ${queryReturnFields}
     `;
@@ -223,12 +253,5 @@ export class BaseModel {
         Logger.error(error);
       });
     return result;
-  }
-
-  /**
-   * return object without null/empry props
-   */
-  props() {
-    return removeEmpty(this);
   }
 }

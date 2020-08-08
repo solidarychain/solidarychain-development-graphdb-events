@@ -62,36 +62,26 @@ export enum GraphLabelRelationship {
 export enum ChaincodeEvent {
   // Asset
   AssetCreatedEvent = 'AssetCreatedEvent',
-  // TODO
   AssetUpdatedEvent = 'AssetUpdatedEvent',
   // Cause
   CauseCreatedEvent = 'CauseCreatedEvent',
-  // TODO
   CauseUpdatedEvent = 'CauseUpdatedEvent',
   // Participant
   ParticipantCreatedEvent = 'ParticipantCreatedEvent',
-  // TODO
   ParticipantUpdatedEvent = 'ParticipantUpdatedEvent',
   // NOT USED: here only for not used reference, this is a admin function used to change participants fingerprint identity
   // ParticipantChangeIdentityEvent = 'ParticipantChangeIdentityEvent',
   // Person
   PersonCreatedEvent = 'PersonCreatedEvent',
-  // TODO
   PersonUpdatedEvent = 'PersonUpdatedEvent',
   // NOT USED: here only for not used reference
   PersonUpdatePasswordEvent = 'PersonUpdatePasswordEvent',
-  // TODO
   PersonUpdateProfileEvent = 'PersonUpdateProfileEvent',
   // NOT USED: here only for not used reference
   // PersonUpdateRolesEvent = 'PersonUpdateRolesEvent',
-  // TODO
   PersonUpsertCitizenCardEvent = 'PersonUpsertCitizenCardEvent',
-  // TODO
   PersonAddAttributeEvent = 'PersonAddAttributeEvent',
   // Transaction
   TransactionCreatedEvent = 'TransactionCreatedEvent',
-  // TODO
   TransactionUpdatedEvent = 'TransactionUpdatedEvent',
-  // TODO: this is need for what?
-  TransactionAssetChangeOwnerEvent = 'TransactionAssetChangeOwnerEvent',
 }

@@ -83,41 +83,4 @@ export class NetworkConnection {
       );
     }
   }
-
-  // private initEvents() {
-  //   debugger;
-  //   this.events = {
-  //     AssetCreatedEvent: (): string => { return `stub for AssetCreatedEvent`}
-  //   }
-  //   // this.events.AssetCreatedEvent = (): string => { return `stub for AssetCreatedEvent`};
-  //   // this.events.AssetUpdatedEvent = (): string => { return `stub for AssetUpdatedEvent`};
-  //   // this.events.CauseCreatedEvent = (): string => { return `stub for CauseCreatedEvent`};
-  //   const keys = Object.keys(ChaincodeEvent);
-  //   // Logger.debug(JSON.stringify(keys, undefined, 2));
-  //   keys.forEach((e) => {
-  //     // this.events[e] = (): string => { return `stub for ${e}` };
-  //   });
-  //   // Logger.debug(JSON.stringify(this.events, undefined, 2));
-  // }
-
-  // private async addContractListeners() {
-  //   await this.contract.addContractListener('my-contract-listener', '(.*?)', (err, event, blockNumber, transactionId, status) => {
-  //     if (err) {
-  //       console.error(err);
-  //       return;
-  //     }
-
-  //     //convert event to something we can parse
-  //     event = (event as any).payload.toString();
-  //     event = JSON.parse((event as any))
-
-  //     //where we output the Participant
-  //     Logger.debug(`Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
-  //     Logger.debug(`${JSON.stringify(event, undefined, 2)}`);
-  //   });
-  //   // Disconnect from the gateway.
-  //   // await gateway.disconnect();
-  // } catch(error) {
-  //   Logger.error(`Failed to submit transaction: ${error}`);
-  // }
 }

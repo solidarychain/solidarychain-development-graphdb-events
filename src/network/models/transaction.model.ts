@@ -59,6 +59,7 @@ export class Transaction extends BaseModel {
       ModelType,
       this.output.entity.type,
     );
+
     // stage#1: create transaction node
     const transactionCypher = `
       MERGE 
@@ -69,6 +70,7 @@ export class Transaction extends BaseModel {
       ${queryReturnFields}
     `;
     writeTransaction.push({ cypher: transactionCypher, params: this });
+
     // stage#2: create relation (:Entity)-[:CREATE]->(:Transaction)-[:TO_ENTITY]->(:Entity)
     const relationCypher = `
       MATCH 
@@ -99,6 +101,7 @@ export class Transaction extends BaseModel {
       `.trim();
       writeTransaction.push({ cypher, params: this });
     }
+
     // stage#4: TransferVolunteeringHours
     if (
       this.transactionType === TransactionType.TransferVolunteeringHours &&
@@ -118,6 +121,7 @@ export class Transaction extends BaseModel {
       debugger;
       writeTransaction.push({ cypher, params: this });
     }
+
     // stage#5: create/merge goods: create goods on graph and tripple links it to inputEntity, outputEntity and transaction
     if (
       this.transactionType === TransactionType.TransferGoods &&
@@ -125,12 +129,13 @@ export class Transaction extends BaseModel {
       this.goods.length > 0
     ) {
       this.goods.forEach(e => {
-        const good = new Good(
-          e,
-          String(this.blockNumber[0]),
-          this.transactionId[0],
-          this.status[0],
-        );
+        const good = new Good({
+          payload: e,
+          event: null,
+          blockNumber: String(this.blockNumber[0]),
+          transactionId: this.transactionId[0],
+          status: this.status[0],
+        });
         const { querySetProperties } = good.getProperties();
         // combine params
         const params = {
@@ -195,6 +200,7 @@ export class Transaction extends BaseModel {
         writeTransaction.push({ cypher, params });
       });
     }
+
     // stage#6: asset transaction
     if (
       this.transactionType === TransactionType.TransferAsset &&

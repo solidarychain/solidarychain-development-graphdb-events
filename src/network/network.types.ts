@@ -41,10 +41,11 @@ export type DecoratedProperties = {
  */
 export type ChaincodeEventActionArguments = {
   payload: any,
-  event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
   blockNumber?: string,
   transactionId?: string,
   status?: string,
+  event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
 }
 
+// dynamic function type used in delegateTo to chaincodeEventAction
 export type ChaincodeEventActionFunction = (args: ChaincodeEventActionArguments) => any;
