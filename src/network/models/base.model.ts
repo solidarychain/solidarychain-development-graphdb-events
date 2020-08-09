@@ -192,10 +192,12 @@ export class BaseModel {
       decoratedProperties.queryReturnFields.push('n');
     }
     // add transaction props
-    decoratedProperties.querySetFields.push('n.blockNumber=n.blockNumber+$blockNumber[0]');
-    decoratedProperties.querySetFields.push('n.transactionId=n.transactionId+$transactionId[0]');
-    decoratedProperties.querySetFields.push('n.transactionStatus=n.transactionStatus+$status[0]');
-    decoratedProperties.querySetFields.push('n.transactionEvent=n.transactionEvent+$event[0]');
+    // The coalesce goes through the comma seperated list (inside the brackets) from left to right and skips the 
+    // variables that are Null values. So in this case if n.* is initially Null the coalesce would take the second parameter which is the empty array.
+    decoratedProperties.querySetFields.push('n.blockNumber=coalesce(n.blockNumber,[])+$blockNumber[0]');
+    decoratedProperties.querySetFields.push('n.transactionId=coalesce(n.transactionId,[])+$transactionId[0]');
+    decoratedProperties.querySetFields.push('n.transactionStatus=coalesce(n.transactionStatus,[])+$status[0]');
+    decoratedProperties.querySetFields.push('n.transactionEvent=coalesce(n.transactionEvent,[])+$event[0]');
     // compose queryRelationProperties
     decoratedProperties.queryRelationProperties = decoratedProperties.queryFields.join(',');
     decoratedProperties.querySetProperties = decoratedProperties.querySetFields.join(',');

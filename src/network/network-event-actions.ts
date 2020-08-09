@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import * as Client from 'fabric-client';
 import { Contract } from 'fabric-network';
-import { getEnumKeyFromEnumValue } from 'src/main.util';
+import { getEnumKeyFromEnumValue, writeJsonToFile } from 'src/main.util';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Asset, Cause, Person, Transaction } from './models';
 import { Participant } from './models/participant.model';
@@ -20,10 +20,8 @@ export class ChaincodeEventActions {
   }
 
   private async addContractListener() {
-    await this.contract.addContractListener(
-      'contract-listener',
-      '(.*?)',
-      (
+    await this.contract.addContractListener('contract-listener', '(.*?)',
+      async (
         error: Error,
         event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
         blockNumber?: string,
@@ -42,8 +40,11 @@ export class ChaincodeEventActions {
         //convert event to something we can parse
         let payload = (event as any).payload.toString();
         payload = JSON.parse(payload as any);
-        // Logger.debug(`Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
-        Logger.debug(`${eventName}: ${JSON.stringify(payload, undefined, 2)}`);
+        const data = { blockNumber, transactionId, status, event: eventEnum, payload };
+        // don't need to use wait here, use it asyncrounous to not block addContractListener
+        writeJsonToFile(`${process.env.NETWORK_SAVE_EVENTS_PATH}/${blockNumber.toString().padStart(8, '0')}.${transactionId}.json`, JSON.stringify(data, undefined, 2))
+          .catch((error) => Logger.error(error));
+        // Logger.debug(`Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}, ${JSON.stringify(payload, undefined, 2)}`);
         // delegateEvent
         this.delegateChaincodeEvent(
           eventEnum,
@@ -102,7 +103,6 @@ export class ChaincodeEventActions {
   }
 
   private async chaincodeEventActionParticipantCreatedEvent({ payload, blockNumber, transactionId, status, event }: ChaincodeEventActionArguments): Promise<any> {
-    // TODO use ChaincodeEventActionArguments in new Model
     const participant: Participant = new Participant({ payload, blockNumber, transactionId, status, event });
     await participant.save(this.neo4jService).catch((error) => Logger.error(error));
   }
