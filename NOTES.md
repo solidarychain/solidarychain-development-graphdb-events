@@ -6,8 +6,8 @@ project use `node/v10.12.0` version, else `fs-extra/lib/mkdirs/make-dir.js:86`
 
 ## Links
 
-P1 https://www.youtube.com/watch?v=9sNgCiPnhZE
-P2 https://www.youtube.com/watch?v=Iu5mYkiSk9k
+- [1. Introducing the client | Building Web Applications with Neo4j and TypeScript](https://www.youtube.com/watch?v=Iu5mYkiSk9k)
+- [2. Integrating Neo4j with NestJS | Building Web Applications with Neo4j and TypeScript](https://www.youtube.com/watch?v=9sNgCiPnhZE)
 
 ## Bootstrap app
 
@@ -168,3 +168,12 @@ node:27684) UnhandledPromiseRejectionWarning: Error: Unable to initialize channe
 ```
 
 using unsync wallets, use `solidarychain-development-graphdb-events/network/bringWalletFiles.sh`
+
+## Containerized development with NestJS and Docker
+
+- [Containerized development with NestJS and Docker](https://blog.logrocket.com/containerized-development-nestjs-docker/)
+
+## Fix Docker Neo4jError: Could not perform discovery. No routing servers available. Known routing table: RoutingTable[database=default database, expirationTime=0, currentTime=1597098363713, routers=[], readers=[], writers=[]]
+
+- https://stackoverflow.com/questions/60637096/how-to-fix-neo4j-docker-container-service-unavailable-error-could-not-perfor
+- https://github.com/neo4j/neo4j-javascript-driver/issues/516

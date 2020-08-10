@@ -44,7 +44,8 @@ export class ChaincodeEventActions {
         // don't need to use wait here, use it asyncrounous to not block addContractListener
         writeJsonToFile(`${process.env.NETWORK_SAVE_EVENTS_PATH}/${blockNumber.toString().padStart(8, '0')}.${transactionId}.json`, JSON.stringify(data, undefined, 2))
           .catch((error) => Logger.error(error));
-        // Logger.debug(`Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}, ${JSON.stringify(payload, undefined, 2)}`);
+        Logger.debug(`Received Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
+        // Logger.debug(JSON.stringify(payload, undefined, 2));
         // delegateEvent
         this.delegateChaincodeEvent(
           eventEnum,

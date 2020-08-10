@@ -1,0 +1,27 @@
+version: '3.6'
+
+# used to build production image and serve as a template for deploy to nodes
+
+services:
+  solidarychain-server-graphdb-events:
+    build:
+      context: .
+      target: production
+    # used to tag image:version
+    image: solidarychain/solidarychain-server-graphdb-events
+    domainname: solidarychain
+    hostname: solidarychain-server-graphdb-events
+    container_name: solidarychain-server-graphdb-events
+    restart: unless-stopped
+    ports:
+      - 543:543
+    volumes:
+      - ./volumes/config:/usr/src/app/config
+      - ./volumes/data:/usr/src/app/data
+    # command: npm run start:prod
+    env_file:
+      - .env
+    extra_hosts:
+      - "orderer1.example.com:192.168.1.61"
+      - "ca.org1.example.com:192.168.1.61"
+      - "peer0.org1.example.com:192.168.1.61"

@@ -1,9 +1,9 @@
 {
-  "name": "api",
+  "name": "solidarychain-server-graphdb-events",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
+  "description": "SolidaryChain Production Network GraphQL Events Connector",
+  "author": "SolidaryChain",
+  "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
@@ -19,7 +19,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker:build:dev": "docker build -t solidarychain/solidarychain-server-graphdb-events .",
+    "docker:build:prod": "docker-compose -f docker-compose-production.yml build",
+    "docker:run:dev": "docker-compose -f docker-compose-production.yml build"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",

@@ -2,16 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { initDirectories } from './main.util';
+import { httpsOptions } from './config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { httpsOptions });
   // initDirectories
   await initDirectories([process.env.NETWORK_SAVE_EVENTS_PATH])
     .catch((error) => Logger.error(error));
-  // Starts listening for shutdown hooks
+  // starts listening for shutdown hooks
   app.enableShutdownHooks();
-  const port: number = Number(process.env.SERVER_PORT) || 3000;
-  Logger.verbose(`server listening on port ${port}`);
+  // server setup
+  const port: number = Number(process.env.HTTPS_SERVER_PORT) || 543;
+  Logger.log(`server listening on port ${port}`);
   await app.listen(port);
 }
 bootstrap();
