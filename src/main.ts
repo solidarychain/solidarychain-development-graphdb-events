@@ -13,7 +13,7 @@ async function bootstrap() {
   app.enableShutdownHooks();
   // server setup
   const port: number = Number(process.env.HTTPS_SERVER_PORT) || 543;
-  Logger.log(`server listening on port ${port}`);
+  Logger.log(`server listening on port ${port}`, 'Main');
   await app.listen(port);
 }
 bootstrap();

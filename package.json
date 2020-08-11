@@ -20,9 +20,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:build:dev": "docker build -t solidarychain/solidarychain-server-graphdb-events .",
+    "docker:run:dev": "docker-compose -f docker-compose-production.yml build",
     "docker:build:prod": "docker-compose -f docker-compose-production.yml build",
-    "docker:run:dev": "docker-compose -f docker-compose-production.yml build"
+    "docker:build:dev": "docker build -t solidarychain/solidarychain-server-graphdb-events ."
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",

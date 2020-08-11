@@ -52,12 +52,6 @@ export class BaseModel {
 
   loggedPersonId?: string;
 
-  // constructor(
-  //   payload: any,
-  //   blockNumber?: string,
-  //   transactionId?: string,
-  //   status?: string,
-  // ) {
   constructor({ payload, blockNumber, transactionId, status, event }: ChaincodeEventActionArguments) {
     Object.assign(this, payload);
     // init arrays
@@ -145,6 +139,7 @@ export class BaseModel {
         if (showLog)
           Logger.log(
             `k:[${k}], v:[${v}], fieldName:[${fieldName}, Persisted:[${persisted}]]`,
+            BaseModel.name
           );
         // if is a mapped field
         if (map.length > 0) {
@@ -206,6 +201,12 @@ export class BaseModel {
   }
 
   async save(neo4jService: Neo4jService): Promise<void | QueryResult> {
+    // check if transaction is already persisted from other node/peer
+    const transactionIsPersisted = await this.checkIfTransactionIsPersisted(neo4jService);
+    if (transactionIsPersisted) {
+      Logger.log(`skip save event on graphdb. transaction is already persisted in graphdb.`, BaseModel.name);
+      return;
+    }
     const { queryFields, queryReturnFields } = this.getProperties();
     // compose merge
     const cypher = `
@@ -236,6 +237,12 @@ export class BaseModel {
    * @param label only used with upserts, to add label in merge
    */
   async update(neo4jService: Neo4jService, payloadPropKeys: string[], label: string = ''): Promise<void | QueryResult> {
+    // check if transaction is already persisted from other node/peer
+    const transactionIsPersisted = await this.checkIfTransactionIsPersisted(neo4jService);
+    if (transactionIsPersisted) {
+      Logger.log(`skip update event on graphdb. transaction is already persisted in graphdb.`, BaseModel.name);
+      return;
+    }
     const { querySetFields, queryReturnFields } = this.getProperties(payloadPropKeys);
     label = (label) ? `:${label}` : '';
     // compose cypher query
@@ -255,5 +262,25 @@ export class BaseModel {
         Logger.error(error);
       });
     return result;
+  }
+
+  async checkIfTransactionIsPersisted(neo4jService: Neo4jService): Promise<boolean> {
+    // compose match
+    const cypher = `
+        MATCH 
+          (n:${this.constructor.name})
+        WHERE 
+          ANY(x IN n.transactionId WHERE x = $transactionId[0])
+        RETURN 
+          n.transactionId
+      `;
+    // Logger.debug(cypher);
+    // pass this as parameter object
+    const result: void | QueryResult = await neo4jService
+      .write(cypher, this)
+      .catch(error => {
+        Logger.error(error);
+      });
+    return (result && result.records && result.records.length > 0);
   }
 }
