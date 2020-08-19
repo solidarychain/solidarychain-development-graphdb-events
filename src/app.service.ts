@@ -20,7 +20,7 @@ export class AppService {
     const result: void | QueryResult = await this.neo4jService
       .read('MATCH (n) RETURN count(n) as count', {})
       .catch(error => {
-        Logger.error(error);
+        Logger.error(error, AppService.name);
       });
     let count = 0;
     const database = this.neo4jService.getConfig().database || 'default';
@@ -47,7 +47,7 @@ export class AppService {
     const result: void | QueryResult = await this.neo4jService
       .write(cypher, movieDto)
       .catch(error => {
-        Logger.error(error);
+        Logger.error(error, AppService.name);
       });
     if (!result) {
       return {};

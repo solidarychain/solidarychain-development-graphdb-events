@@ -86,12 +86,12 @@ export class BaseModel {
     const label: ModelType = getEnumKeyFromEnumValue(ModelType, modelType);
     // compose cypher query
     const cypher = `MATCH (n:${label} { id: $id }) RETURN n`;
-    // Logger.debug(cypher);
+    // Logger.debug(cypher, BaseModel.name);
     // pass this as parameter object
     const result: void | QueryResult = await neo4jService
       .read(cypher, { id })
       .catch(error => {
-        Logger.error(error);
+        Logger.error(error, BaseModel.name);
       });
     if (!result) {
       return null;
@@ -151,6 +151,7 @@ export class BaseModel {
             if (showLog)
               Logger.debug(
                 `${k}.${sourceProp}=[${this[k][sourceProp]}]: mapped to ${targetProp}: $${k}.${sourceProp}`,
+                BaseModel.name
               );
             if (this[k]) {
               decoratedProperties.queryFields.push(
@@ -202,11 +203,8 @@ export class BaseModel {
 
   async save(neo4jService: Neo4jService): Promise<void | QueryResult> {
     // check if transaction is already persisted from other node/peer
-    const transactionIsPersisted = await this.checkIfTransactionIsPersisted(neo4jService);
-    if (transactionIsPersisted) {
-      Logger.log(`skip save event on graphdb. transaction is already persisted in graphdb.`, BaseModel.name);
-      return;
-    }
+    if (await this.checkIfTransactionIsPersisted(neo4jService)) return;
+    // proceed with save
     const { queryFields, queryReturnFields } = this.getProperties();
     // compose merge
     const cypher = `
@@ -220,12 +218,12 @@ export class BaseModel {
       RETURN 
         ${queryReturnFields}
     `;
-    // Logger.debug(cypher);
+    // Logger.debug(cypher, BaseModel.name);
     // pass this as parameter object
     const result: void | QueryResult = await neo4jService
       .write(cypher, this)
       .catch(error => {
-        Logger.error(error);
+        Logger.error(error, BaseModel.name);
       });
     return result;
   }
@@ -238,11 +236,8 @@ export class BaseModel {
    */
   async update(neo4jService: Neo4jService, payloadPropKeys: string[], label: string = ''): Promise<void | QueryResult> {
     // check if transaction is already persisted from other node/peer
-    const transactionIsPersisted = await this.checkIfTransactionIsPersisted(neo4jService);
-    if (transactionIsPersisted) {
-      Logger.log(`skip update event on graphdb. transaction is already persisted in graphdb.`, BaseModel.name);
-      return;
-    }
+    if (await this.checkIfTransactionIsPersisted(neo4jService)) return;
+    // proceed with save
     const { querySetFields, queryReturnFields } = this.getProperties(payloadPropKeys);
     label = (label) ? `:${label}` : '';
     // compose cypher query
@@ -254,16 +249,20 @@ export class BaseModel {
       RETURN 
         ${queryReturnFields}
     `;
-    // Logger.debug(cypher);
+    // Logger.debug(cypher, BaseModel.name);
     // pass this as parameter object
     const result: void | QueryResult = await neo4jService
       .write(cypher, this)
       .catch(error => {
-        Logger.error(error);
+        Logger.error(error, BaseModel.name);
       });
     return result;
   }
 
+  /**
+   * helper method to check if current transactionId has alreay been persisted by other node/peer
+   * @param neo4jService
+   */
   async checkIfTransactionIsPersisted(neo4jService: Neo4jService): Promise<boolean> {
     // compose match
     const cypher = `
@@ -274,13 +273,18 @@ export class BaseModel {
         RETURN 
           n.transactionId
       `;
-    // Logger.debug(cypher);
+    // Logger.debug(cypher, BaseModel.name);
     // pass this as parameter object
     const result: void | QueryResult = await neo4jService
-      .write(cypher, this)
+      .read(cypher, this)
       .catch(error => {
-        Logger.error(error);
+        Logger.error(error, BaseModel.name);
       });
-    return (result && result.records && result.records.length > 0);
+    const isPersisted = (result && result.records && result.records.length > 0);
+    // log here, this way we dont have this boilerplate in function calls
+    if (isPersisted) {
+      Logger.log(`skip persist event on graphdb. transaction is already persisted in graphdb by other network node.`, BaseModel.name);
+    }
+    return isPersisted;
   }
 }

@@ -17,12 +17,12 @@ export class NetworkService implements OnApplicationShutdown {
     @Inject(Neo4jService) private readonly neo4jService: Neo4jService,
   ) {
     // bellow is working
-    // Logger.debug(this.connection.getPeerIdentity());
-    // Logger.debug(this.neo4jService.getConfig().scheme);
+    // Logger.debug(this.connection.getPeerIdentity(), NetworkService.name);
+    // Logger.debug(this.neo4jService.getConfig().scheme, NetworkService.name);
   }
 
   onApplicationShutdown(signal?: string) {
-    Logger.log(`cleanup application Shutdown`);
+    Logger.log(`cleanup application Shutdown`, NetworkService.name);
     // Disconnect from the gateway.
     this.connection.disconnectGateway();
   }

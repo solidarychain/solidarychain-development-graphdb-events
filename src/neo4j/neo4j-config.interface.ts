@@ -1,3 +1,5 @@
+import { Config } from 'neo4j-driver/types';
+
 export type Neo4jScheme =
   | 'neo4j'
   | 'neo4j+s'
@@ -13,4 +15,5 @@ export interface Neo4jConfig {
   username: string;
   password: string;
   database?: string;
+  options?: Config
 }

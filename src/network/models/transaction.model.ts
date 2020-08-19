@@ -12,6 +12,7 @@ import { BaseModel } from './base.model';
 import { Good } from './good.model';
 import { Participant } from './participant.model';
 import { Asset } from './asset.model';
+import { Logger } from '@nestjs/common';
 
 export class Transaction extends BaseModel {
   @Persisted
@@ -48,6 +49,8 @@ export class Transaction extends BaseModel {
 
   // overriding super class method
   async save(neo4jService: Neo4jService): Promise<any> {
+    // check if transaction is already persisted from other node/peer
+    if (await this.checkIfTransactionIsPersisted(neo4jService)) return;
     // init writeTransaction
     const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { queryFields, queryReturnFields } = this.getProperties();
@@ -118,7 +121,6 @@ export class Transaction extends BaseModel {
           b.${fieldPrefix}Credit=(b.${fieldPrefix}Credit+$quantity),
           b.${fieldPrefix}Balance=(b.${fieldPrefix}Balance+$quantity)
       `.trim();
-      debugger;
       writeTransaction.push({ cypher, params: this });
     }
 

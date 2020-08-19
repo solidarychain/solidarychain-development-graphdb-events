@@ -14,7 +14,8 @@ services:
     container_name: solidarychain-server-graphdb-events
     restart: unless-stopped
     ports:
-      - 543:543
+      # - 543:543
+      - ${HTTPS_SERVER_PORT}:${HTTPS_SERVER_PORT}
     volumes:
       - ./volumes/config:/usr/src/app/config
       - ./volumes/data:/usr/src/app/data

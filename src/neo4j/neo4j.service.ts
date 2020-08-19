@@ -9,7 +9,7 @@ export class Neo4jService {
   constructor(
     @Inject(NEO4J_CONFIG) private readonly config: Neo4jConfig,
     @Inject(NEO4J_DRIVER) private readonly driver: Driver,
-  ) {}
+  ) { }
 
   getConfig(): Neo4jConfig {
     return this.config;
@@ -44,7 +44,9 @@ export class Neo4jService {
     database?: string,
   ): Result {
     const session: Session = this.getWriteSession(database);
-    return session.run(cypher, params);
+    const result = session.run(cypher, params);
+    debugger;
+    return result;
   }
 
   async writeTransaction(
@@ -66,13 +68,33 @@ export class Neo4jService {
       });
       // commit transaction
       await tx.commit();
-      Logger.log(`transaction committed`);
+      Logger.log(`transaction committed`, Neo4jService.name);
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, Neo4jService.name);
       await tx.rollback();
-      Logger.log('transaction rolled back');
+      Logger.log('transaction rolled back', Neo4jService.name);
     } finally {
       await session.close();
+      // stats
+      results.forEach((r, idx) => {
+        if (r.summary) {
+          const stats = { ...(r.summary as any).updateStatistics._stats };
+          const keys = Object.keys(stats);
+          const props: string[] = [];
+          // cleanUp empty properties
+          keys.forEach((e) => {
+            if (stats[e] === 0) {
+              delete stats[e];
+            } else {
+              props.push(`${e}=${stats[e]}`);
+            }
+          });
+          // only if have props, normally in first query
+          if (props.length > 0) {
+            Logger.log(`writeTransaction updateStatistics query[${idx}]: ${props.join(', ')}`, Neo4jService.name);
+          }
+        }
+      });
       return results;
     }
   }

@@ -1,11 +1,10 @@
+import { getEnumKeyFromEnumValue } from 'src/main.util';
+import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Persisted, Properties } from '../decorators';
-import { AssetType, ModelType, GraphLabelRelationship } from '../network.enums';
+import { AssetType, GraphLabelRelationship, ModelType } from '../network.enums';
 import { Entity, WriteTransaction } from '../network.types';
 import { BaseModel } from './base.model';
 import { Participant } from './participant.model';
-import { Neo4jService } from 'src/neo4j/neo4j.service';
-import { getEnumKeyFromEnumValue } from 'src/main.util';
-import { Logger } from '@nestjs/common';
 
 export class Asset extends BaseModel {
   @Persisted
@@ -43,11 +42,13 @@ export class Asset extends BaseModel {
 
   // static async getEntity(neo4jService: Neo4jService, id: string): Promise<Record[]> {
   //   const record = await super.getEntity<Asset>(neo4jService, ModelType.Asset, id);
-  //   Logger.error(record);
+  //   Logger.error(record, Asset.name);
   // }
 
   // overriding super class method
   async save(neo4jService: Neo4jService): Promise<any> {
+    // check if transaction is already persisted from other node/peer
+    if (await this.checkIfTransactionIsPersisted(neo4jService)) return;
     // init writeTransaction
     const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { queryFields, queryReturnFields } = this.getProperties();

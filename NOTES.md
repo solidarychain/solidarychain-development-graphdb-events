@@ -177,3 +177,7 @@ using unsync wallets, use `solidarychain-development-graphdb-events/network/brin
 
 - https://stackoverflow.com/questions/60637096/how-to-fix-neo4j-docker-container-service-unavailable-error-could-not-perfor
 - https://github.com/neo4j/neo4j-javascript-driver/issues/516
+
+## Exception has occurred: Neo4jError: Neo4jError: This connection holder does not serve connections
+
+transactions work, but in debug fire this exception

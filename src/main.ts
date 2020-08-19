@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { httpsOptions });
   // initDirectories
   await initDirectories([process.env.NETWORK_SAVE_EVENTS_PATH])
-    .catch((error) => Logger.error(error));
+    .catch((error) => Logger.error(error, 'Main'));
   // starts listening for shutdown hooks
   app.enableShutdownHooks();
   // server setup

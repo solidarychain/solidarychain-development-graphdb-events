@@ -4,7 +4,7 @@ import * as path from 'path';
 import { readJsonFromFile } from '../main.util';
 import { Neo4jService } from '../neo4j/neo4j.service';
 import { NetworkConfig } from './network-config.interface';
-import { ChaincodeEventActions } from './network-event-actions';
+import { NetworkEventActions } from './network-event-actions';
 
 export class NetworkConnection {
   private wallet: FileSystemWallet;
@@ -12,7 +12,7 @@ export class NetworkConnection {
   private gateway: Gateway;
   private network: Network;
   private contract: Contract;
-  private chaincodeEventActions: ChaincodeEventActions;
+  private chaincodeEventActions: NetworkEventActions;
 
   constructor(
     private readonly config: NetworkConfig,
@@ -31,7 +31,7 @@ export class NetworkConnection {
     this.peerIdentity = this.config.peerIdentity;
     // validate user wallet
     await this.validate().catch(error => {
-      Logger.error(error.message);
+      Logger.error(error.message, NetworkConnection.name);
       process.exit();
     });
     // connect to Fabric Network, starting a new gateway
@@ -50,7 +50,7 @@ export class NetworkConnection {
     // this.initEvents();
     // init ContractListeners after initEvents
     // this.addContractListeners();
-    this.chaincodeEventActions = new ChaincodeEventActions(
+    this.chaincodeEventActions = new NetworkEventActions(
       this.contract,
       this.neo4jService,
     );
@@ -68,7 +68,7 @@ export class NetworkConnection {
    */
   disconnectGateway() {
     this.gateway.disconnect();
-    Logger.log(`disconnected from network`);
+    Logger.log(`disconnected from network`, NetworkConnection.name);
   }
 
   /**

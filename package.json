@@ -20,7 +20,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:run:dev": "docker-compose -f docker-compose-production.yml build",
+    "docker:run:prod": "docker-compose -f docker-compose-production.yml up",
+    "docker:run:dev": "docker-compose up",
     "docker:build:prod": "docker-compose -f docker-compose-production.yml build",
     "docker:build:dev": "docker build -t solidarychain/solidarychain-server-graphdb-events ."
   },

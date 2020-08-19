@@ -2,6 +2,8 @@
   "cSpell.words": [
     "MSPID",
     "chaincode",
+    "channelall",
+    "graphdb",
     "koakh",
     "nestjs",
     "prebuild",
@@ -20,5 +22,6 @@
     "panel.border": "#1f6fd0",
     "sideBar.border": "#1f6fd0"
   },
-  "peacock.remoteColor": "#1857a4"
+  "peacock.remoteColor": "#1857a4",
+  "peacock.color": "#1857a4"
 }

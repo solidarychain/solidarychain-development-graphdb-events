@@ -20,7 +20,7 @@ export const writeJsonToFile = async (filePath: string, data: any) => {
   try {
     await fs.promises.writeFile(filePath, data);
   } catch (error) {
-    Logger.error(error);
+    Logger.error(error, 'MainUtil');
   }
 }
 
