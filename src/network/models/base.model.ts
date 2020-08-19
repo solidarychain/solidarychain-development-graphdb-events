@@ -1,17 +1,11 @@
-import 'reflect-metadata';
 import { Logger } from '@nestjs/common';
 import { QueryResult } from 'neo4j-driver/types/result';
+import 'reflect-metadata';
+import { getEnumKeyFromEnumValue, removeEmpty } from 'src/main.util';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
-import {
-  Persisted,
-  Properties,
-  PersistedUsingInstance,
-  getProperties,
-} from '../decorators';
-import { removeEmpty, getEnumKeyFromEnumValue } from 'src/main.util';
-import { DecoratedProperties } from '../network.types';
-import { ModelType, ChaincodeEvent } from '../network.enums';
-import { ChaincodeEventActionArguments } from '../network.types';
+import { getProperties, Persisted, PersistedUsingInstance, Properties } from '../decorators';
+import { ChaincodeEvent, ModelType } from '../network.enums';
+import { ChaincodeEventActionArguments, DecoratedProperties, WriteTransaction } from '../network.types';
 
 export class BaseModel {
   public type: string;
@@ -204,7 +198,8 @@ export class BaseModel {
   async save(neo4jService: Neo4jService): Promise<void | QueryResult> {
     // check if transaction is already persisted from other node/peer
     if (await this.checkIfTransactionIsPersisted(neo4jService)) return;
-    // proceed with save
+    // init writeTransaction
+    const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { queryFields, queryReturnFields } = this.getProperties();
     // compose merge
     const cypher = `
@@ -218,14 +213,17 @@ export class BaseModel {
       RETURN 
         ${queryReturnFields}
     `;
-    // Logger.debug(cypher, BaseModel.name);
-    // pass this as parameter object
-    const result: void | QueryResult = await neo4jService
-      .write(cypher, this)
-      .catch(error => {
-        Logger.error(error, BaseModel.name);
-      });
-    return result;
+    writeTransaction.push({ cypher, params: this });
+    const txResult = await neo4jService.writeTransaction(writeTransaction);
+    // TODO: deprecated old write without transactions
+    // // Logger.debug(cypher, BaseModel.name);
+    // // pass this as parameter object
+    // const result: void | QueryResult = await neo4jService
+    //   .write(cypher, this)
+    //   .catch(error => {
+    //     Logger.error(error, BaseModel.name);
+    //   });
+    // return result;
   }
 
   /**
@@ -237,7 +235,8 @@ export class BaseModel {
   async update(neo4jService: Neo4jService, payloadPropKeys: string[], label: string = ''): Promise<void | QueryResult> {
     // check if transaction is already persisted from other node/peer
     if (await this.checkIfTransactionIsPersisted(neo4jService)) return;
-    // proceed with save
+    // init writeTransaction
+    const writeTransaction: WriteTransaction[] = new Array<WriteTransaction>();
     const { querySetFields, queryReturnFields } = this.getProperties(payloadPropKeys);
     label = (label) ? `:${label}` : '';
     // compose cypher query
@@ -249,14 +248,17 @@ export class BaseModel {
       RETURN 
         ${queryReturnFields}
     `;
-    // Logger.debug(cypher, BaseModel.name);
-    // pass this as parameter object
-    const result: void | QueryResult = await neo4jService
-      .write(cypher, this)
-      .catch(error => {
-        Logger.error(error, BaseModel.name);
-      });
-    return result;
+    writeTransaction.push({ cypher, params: this });
+    const txResult = await neo4jService.writeTransaction(writeTransaction);
+    // TODO: deprecated old write without transactions
+    // // Logger.debug(cypher, BaseModel.name);
+    // // pass this as parameter object
+    // const result: void | QueryResult = await neo4jService
+    //   .write(cypher, this)
+    //   .catch(error => {
+    //     Logger.error(error, BaseModel.name);
+    //   });
+    // return result;
   }
 
   /**
