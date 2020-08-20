@@ -4,8 +4,13 @@ import 'reflect-metadata';
 import { getEnumKeyFromEnumValue, removeEmpty } from 'src/main.util';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { getProperties, Persisted, PersistedUsingInstance, Properties } from '../decorators';
+import { LINK_TO_GENESIS_MODELS, NODE_ID_GENESIS_BLOCK } from '../network.constants';
 import { ChaincodeEvent, ModelType } from '../network.enums';
 import { ChaincodeEventActionArguments, DecoratedProperties, WriteTransaction } from '../network.types';
+// import { Asset } from './asset.model';
+// import { Cause } from './cause.model';
+// import { Participant } from './participant.model';
+// import { Person } from './person.model';
 
 export class BaseModel {
   public type: string;
@@ -66,7 +71,7 @@ export class BaseModel {
   }
 
   /**
-   * return object without null/empry props
+   * return object without null/empty props
    */
   props() {
     return removeEmpty(this);
@@ -107,7 +112,9 @@ export class BaseModel {
       queryRelationProperties: '',
       querySetProperties: '',
     };
-    // temp object to save queryRelation objtec with non empty properties
+    // skip push below fields, this are used in ON CREATE
+    const skipPushQueryFields = ['blockNumber', 'transactionId', 'transactionStatus', 'transactionEvent'];
+    // temp object to save queryRelation object with non empty properties
     const relationObject = {};
     const props = Object.entries(this);
     props.forEach(e => {
@@ -162,7 +169,11 @@ export class BaseModel {
           });
         } else {
           if (this[k]) {
-            decoratedProperties.queryFields.push(`${fieldName}: $${k}`);
+            // skip transaction fields on queryFields (insert)
+            const skipPush = skipPushQueryFields.includes(k);
+            if (!skipPush) {
+              decoratedProperties.queryFields.push(`${fieldName}: $${k}`);
+            };
             // push if exists in payloadPropKeys array, or payloadPropKeys is empty (add all)
             if (payloadPropKeys.length === 0 || payloadPropKeys.indexOf(fieldName) > -1) {
               decoratedProperties.querySetFields.push(`n.${fieldName}=$${k}`);
@@ -182,7 +193,7 @@ export class BaseModel {
       decoratedProperties.queryReturnFields.push('n');
     }
     // add transaction props
-    // The coalesce goes through the comma seperated list (inside the brackets) from left to right and skips the 
+    // The coalesce goes through the comma separated list (inside the brackets) from left to right and skips the 
     // variables that are Null values. So in this case if n.* is initially Null the coalesce would take the second parameter which is the empty array.
     decoratedProperties.querySetFields.push('n.blockNumber=coalesce(n.blockNumber,[])+$blockNumber[0]');
     decoratedProperties.querySetFields.push('n.transactionId=coalesce(n.transactionId,[])+$transactionId[0]');
@@ -206,14 +217,25 @@ export class BaseModel {
       MERGE 
         (n:${this.constructor.name} { ${queryFields} })
       ON CREATE SET
-        n.blockNumber=[],
-        n.transactionId=[],
-        n.transactionStatus=[],
-        n.transactionEvent=[]
+        n.blockNumber=$blockNumber,
+        n.transactionId=$transactionId,
+        n.transactionStatus=$status,
+        n.transactionEvent=$event
       RETURN 
         ${queryReturnFields}
     `;
     writeTransaction.push({ cypher, params: this });
+    this.linkToGenesis(writeTransaction);
+    // if (LINK_TO_GENESIS_MODELS.includes(this.constructor.name)) {
+    //   const cypher = `
+    //     MATCH 
+    //       (g {id: $genesisBlockId}),
+    //       (n:${this.constructor.name} {id:$id})
+    //     MERGE
+    //       (n)-[r:CONNECTED]->(g)
+    //   `;
+    //   writeTransaction.push({ cypher, params: { id: this.id, genesisBlockId: NODE_ID_GENESIS_BLOCK } });
+    // }
     const txResult = await neo4jService.writeTransaction(writeTransaction);
     // TODO: deprecated old write without transactions
     // // Logger.debug(cypher, BaseModel.name);
@@ -262,7 +284,7 @@ export class BaseModel {
   }
 
   /**
-   * helper method to check if current transactionId has alreay been persisted by other node/peer
+   * helper method to check if current transactionId has already been persisted by other node/peer
    * @param neo4jService
    */
   async checkIfTransactionIsPersisted(neo4jService: Neo4jService): Promise<boolean> {
@@ -288,5 +310,18 @@ export class BaseModel {
       Logger.log(`skip persist event on graphdb. transaction is already persisted in graphdb by other network node.`, BaseModel.name);
     }
     return isPersisted;
+  }
+
+  async linkToGenesis(writeTransaction: WriteTransaction[]): Promise<void> {
+    if (LINK_TO_GENESIS_MODELS.includes(this.constructor.name)) {
+      const cypher = `
+        MATCH 
+          (g {id: $genesisBlockId}),
+          (n:${this.constructor.name} {id:$id})
+        MERGE
+          (n)-[r:CONNECTED]->(g)
+      `;
+      writeTransaction.push({ cypher, params: { id: this.id, genesisBlockId: NODE_ID_GENESIS_BLOCK } });
+    }
   }
 }

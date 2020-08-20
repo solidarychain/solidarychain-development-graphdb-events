@@ -3,7 +3,7 @@ import { Entity } from '../network.types';
 import { BaseModel } from './base.model';
 import { GenericBalance } from './classes/generic-balance';
 import { Good } from './good.model';
-import { Participant } from '.';
+import { Participant } from './participant.model';
 
 export class Cause extends BaseModel {
   @Persisted

@@ -33,7 +33,7 @@ ON (n.propertyName_1,
 CALL db.indexes
 ```
 
-```shell
+```cypher
 CREATE CONSTRAINT ParticipantIdConstraint ON (n:Participant) ASSERT n.id IS UNIQUE;
 CREATE CONSTRAINT ParticipantCodeConstraint ON (n:Participant) ASSERT n.code IS UNIQUE;
 CREATE CONSTRAINT ParticipantNameConstraint ON (n:Participant) ASSERT n.name IS UNIQUE;
@@ -45,7 +45,7 @@ CREATE CONSTRAINT PersonFiscalNumberConstraint ON (n:Person) ASSERT n.fiscalNumb
 CREATE CONSTRAINT PersonSocialSecurityNumberConstraint ON (n:Person) ASSERT n.socialSecurityNumber IS UNIQUE;
 CREATE CONSTRAINT PersonBeneficiaryNumberConstraint ON (n:Person) ASSERT n.beneficiaryNumber IS UNIQUE;
 CREATE CONSTRAINT PersonPanConstraint ON (n:Person) ASSERT n.pan IS UNIQUE;
-CREATE CONSTRAINT CauseIdConstraint ON (n:cause) ASSERT n.id IS UNIQUE;
+CREATE CONSTRAINT CauseIdConstraint ON (n:Cause) ASSERT n.id IS UNIQUE;
 CREATE CONSTRAINT CauseNameConstraint ON (n:Cause) ASSERT n.name IS UNIQUE;
 CREATE CONSTRAINT AssetIdConstraint ON (n:Asset) ASSERT n.id IS UNIQUE;
 CREATE CONSTRAINT AssetNameConstraint ON (n:Asset) ASSERT n.name IS UNIQUE;
@@ -74,4 +74,52 @@ CREATE INDEX TransactionTransactionTypeIndex FOR (n:Transaction) ON (n.transacti
 CREATE INDEX TransactionResourceTypeIndex FOR (n:Transaction) ON (n.resourceType);
 CREATE INDEX TransactionAssetIdIndex FOR (n:Transaction) ON (n.assetId);
 CREATE INDEX TransactionCreatedDateIndex FOR (n:Transaction) ON (n.createdDate);
+```
+
+```cypher
+MERGE (g {
+  id: "00000000-0000-0000-0000-000000000000"
+})
+MERGE (n:Participant {
+  id: "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+  code: "gov",
+  name: "Big Government"
+})-[:CONNECTED]->(g);
+
+MATCH (g {
+  id: "00000000-0000-0000-0000-000000000000"
+})
+MERGE (n:Person {
+  id: "4ea88521-031b-4279-9165-9c10e1839001",
+  firstname: "John",
+  lastname: "Doe",
+  beneficiaryNumber: "285191659",
+  birthDate: "61985472",
+  cardVersion: "006.007.23",
+  country: "PRT",
+  documentNumber: "09879462 0 ZZ3",
+  documentType: "Cartão De Cidadão",
+  emissionDate: "61985472",
+  emittingEntity: "República Portuguesa",
+  expirationDate: "61985472",
+  fatherFirstname: "Alberto",
+  fatherLastname: "De Andrade Monteiro",
+  fiscalNumber: "182692124",
+  gender: "M",
+  height: "1.81",
+  identityNumber: "098794620",
+  motherFirstname: "Maria Da Graça De Oliveira Mendes",
+  motherLastname: "Monteiro",
+  nationality: "PRT",
+  otherInformation: "",
+  pan: "0000036014662658",
+  requestLocation: "CRCiv. Figueira da Foz",
+  socialSecurityNumber: "11103478242",
+  username: "johndoe",
+  password: "12345678",
+  email: "johndoe@mail.com"
+})-[:CONNECTED]->(g);
+
+# check with
+MATCH (n)-[r]-(m) RETURN n,m,r
 ```

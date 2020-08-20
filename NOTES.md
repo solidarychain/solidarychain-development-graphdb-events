@@ -181,3 +181,43 @@ using unsync wallets, use `solidarychain-development-graphdb-events/network/brin
 ## Exception has occurred: Neo4jError: Neo4jError: This connection holder does not serve connections
 
 transactions work, but in debug fire this exception
+
+occurs only in new transaction, and and in `links-laptop`, in koakh-ultrabook it won't occur
+
+## Exception has occurred: Neo4jError: Neo4jError: Could not perform discovery. No routing servers available. Known routing table: RoutingTable[database=default database, expirationTime=0, currentTime=1597938023892, routers=[], readers=[], writers=[]]
+
+after restart neo4j server and clean database, and add SCHEMA, when we launch `npm run start:debug`
+I noted that chrome can't login to, it lost connection, but firefox works
+
+```shell
+$ npm run start:debug
+[Nest] 31940   - 08/20/2020, 4:32:15 PM   [Neo4jModule] error:Connection [0][] experienced a fatal error {"message":"Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0. Caused by: Server certificate is not trusted. If you trust the database you are connecting to, use TRUST_CUSTOM_CA_SIGNED_CERTIFICATES and add the signing certificate, or the server certificate, to the list of certificates trusted by this driver using `neo4j.driver(.., { trustedCertificates:['path/to/certificate.crt']}). This  is a security measure to protect against man-in-the-middle attacks. If you are just trying  Neo4j out and are not concerned about encryption, simply disable it using `encrypted=\"ENCRYPTION_OFF\"` in the driver options. Socket responded with: CERT_HAS_EXPIRED","stack":"Neo4jError: Failed to connect to server. Please ensure that your database is listening on the correct host and port and that you have compatible encryption settings both on Neo4j server and driver. Note that the default encryption setting has changed in Neo4j 4.0. Caused by: Server certificate is not trusted. If you trust the database you are connecting to, use TRUST_CUSTOM_CA_SIGNED_CERTIFICATES and add the signing certificate, or the server certificate, to the list of certificates trusted by this driver using `neo4j.driver(.., { trustedCertificates:['path/to/certificate.crt']}). This  is a security measure to protect against man-in-the-middle attacks. If you are just trying  Neo4j out and are not concerned about encryption, simply disable it using `encrypted=\"ENCRYPTION_OFF\"` in the driver options. Socket responded with: CERT_HAS_EXPIRED\n    at newError (/media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-graphdb-events/node_modules/neo4j-driver/lib/error.js:79:10)\n    at NodeChannel._handleConnectionError (/media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-graphdb-events/node_modules/neo4j-driver/lib/internal/node/node-channel.js:226:41)\n    at TLSSocket.<anonymous> (/media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-graphdb-events/node_modules/neo4j-driver/lib/internal/node/node-channel.js:72:9)\n    at Object.onceWrapper (events.js:273:13)\n    at TLSSocket.emit (events.js:182:13)\n    at TLSSocket.onConnectSecure (_tls_wrap.js:1070:12)\n    at TLSSocket.emit (events.js:182:13)\n    at TLSSocket._finishInit (_tls_wrap.js:631:8)","code":"SessionExpired","name":"Neo4jError"}
+```
+
+the fix was strange is fixed with
+
+```shell
+$ cd /srv/docker/neo4j/neo4j406ent
+$ ./updatecertificates.sh
+$ docker-compose down && docker-compose up -d && docker-compose logs -f
+$ npm run start:debug
+...
+[Nest] 10373   - 08/20/2020, 4:49:19 PM   [Neo4jModule] info:Routing table is stale for database: "" and access mode: "READ": RoutingTable[database=default database, expirationTime=0, currentTime=1597938559884, routers=[], readers=[], writers=[]] +4ms
+[Nest] 10373   - 08/20/2020, 4:49:20 PM   [Neo4jModule] info:Updated routing table RoutingTable[database=default database, expirationTime=1597938860158, currentTime=1597938560160, routers=[neo4j.koakh.com:7687], readers=[neo4j.koakh.com:7687], writers=[neo4j.koakh.com:7687]] +277ms
+...
+# now it works
+```
+
+> I change databases in browser launch
+
+```cypher
+use system
+SHOW DATABASES;
+╒════════╤══════════════════════╤════════════╤═════════════════╤═══════════════╤═══════╤═════════╕
+│"name"  │"address"             │"role"      │"requestedStatus"│"currentStatus"│"error"│"default"│
+╞════════╪══════════════════════╪════════════╪═════════════════╪═══════════════╪═══════╪═════════╡
+│"neo4j" │"neo4j.koakh.com:7687"│"standalone"│"online"         │"online"       │""     │true     │
+├────────┼──────────────────────┼────────────┼─────────────────┼───────────────┼───────┼─────────┤
+│"system"│"neo4j.koakh.com:7687"│"standalone"│"online"         │"online"       │""     │false    │
+└────────┴──────────────────────┴────────────┴─────────────────┴───────────────┴───────┴─────────┘
+```

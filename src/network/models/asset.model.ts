@@ -66,6 +66,7 @@ export class Asset extends BaseModel {
         })<-[:${GraphLabelRelationship.OWNS_ASSET}]-(a)
     `;
     writeTransaction.push({ cypher, params: this });
+    this.linkToGenesis(writeTransaction);
     const txResult = await neo4jService.writeTransaction(writeTransaction);
   }
 }
