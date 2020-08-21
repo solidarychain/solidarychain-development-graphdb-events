@@ -164,7 +164,6 @@ export class Transaction extends BaseModel {
         `;
         writeTransaction.push({ cypher, params });
         // stage#5.2: create triple relation inputEntity(decrease), outputEntity(increase) and transaction(increase)
-        debugger;
         cypher = `
           MATCH
             (a:${this.constructor.name} {id: $relationTransactionId}),

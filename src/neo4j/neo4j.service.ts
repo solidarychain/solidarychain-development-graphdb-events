@@ -44,9 +44,7 @@ export class Neo4jService {
     database?: string,
   ): Result {
     const session: Session = this.getWriteSession(database);
-    const result = session.run(cypher, params);
-    debugger;
-    return result;
+    return session.run(cypher, params);
   }
 
   async writeTransaction(
