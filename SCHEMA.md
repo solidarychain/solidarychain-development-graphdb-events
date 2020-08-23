@@ -121,5 +121,5 @@ MERGE (n:Person {
 })-[:CONNECTED]->(g);
 
 # check with
-MATCH (n)-[r]-(m) RETURN n,m,r
+MATCH (n)-[r]-(m) RETURN n,m,r;
 ```
