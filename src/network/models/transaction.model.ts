@@ -12,7 +12,6 @@ import { BaseModel } from './base.model';
 import { Good } from './good.model';
 import { Participant } from './participant.model';
 import { Asset } from './asset.model';
-import { Logger } from '@nestjs/common';
 
 export class Transaction extends BaseModel {
   @Persisted
@@ -70,7 +69,7 @@ export class Transaction extends BaseModel {
           ${queryFields}
         })
       RETURN 
-      ${queryReturnFields}
+        ${queryReturnFields}
     `;
     writeTransaction.push({ cypher: transactionCypher, params: this });
 
@@ -133,10 +132,10 @@ export class Transaction extends BaseModel {
       this.goods.forEach(e => {
         const good = new Good({
           payload: e,
-          event: null,
           blockNumber: String(this.blockNumber[0]),
           transactionId: this.transactionId[0],
           status: this.status[0],
+          event: this.eventObject[0],
         });
         const { querySetProperties } = good.getProperties();
         // combine params
@@ -151,12 +150,11 @@ export class Transaction extends BaseModel {
         let cypher = `
           MERGE 
             (n:${good.constructor.name} {barCode: $barCode})
-          ON CREATE SET
-            n:${good.constructor.name},
-            ${querySetProperties},
-            n.balanceCredit=0,
-            n.balanceDebit=0,
-            n.balanceBalance=0
+            ON CREATE SET
+              ${querySetProperties},
+              n.balanceCredit=0,
+              n.balanceDebit=0,
+              n.balanceBalance=0
           SET 
             n.balanceCredit=(n.balanceCredit+$balance.credit),
             n.balanceDebit=(n.balanceDebit+$balance.debit),

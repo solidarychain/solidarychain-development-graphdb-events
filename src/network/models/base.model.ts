@@ -7,10 +7,7 @@ import { getProperties, Persisted, PersistedUsingInstance, Properties } from '..
 import { LINK_TO_GENESIS_MODELS, NODE_ID_GENESIS_BLOCK } from '../network.constants';
 import { ChaincodeEvent, ModelType } from '../network.enums';
 import { ChaincodeEventActionArguments, DecoratedProperties, WriteTransaction } from '../network.types';
-// import { Asset } from './asset.model';
-// import { Cause } from './cause.model';
-// import { Participant } from './participant.model';
-// import { Person } from './person.model';
+import * as Client from 'fabric-client';
 
 export class BaseModel {
   public type: string;
@@ -51,13 +48,16 @@ export class BaseModel {
 
   loggedPersonId?: string;
 
+  eventObject: Client.ChaincodeEvent | Client.ChaincodeEvent[];
+
   constructor({ payload, blockNumber, transactionId, status, event }: ChaincodeEventActionArguments) {
     Object.assign(this, payload);
-    // init arrays
+    // init arrays, require for future updates, to keep history of all transactions, blocks etc, every update push one  more item to array
     this.blockNumber = [];
     this.transactionId = [];
     this.status = [];
     this.event = [];
+    this.eventObject = [];
     // push to arrays
     this.blockNumber.push(Number(blockNumber));
     this.transactionId.push(transactionId);
@@ -68,6 +68,8 @@ export class BaseModel {
       eventName,
     );
     this.event.push(eventEnum);
+    // push original eventObject, used we need to pass it to othet models like in transaction goods
+    this.eventObject.push(((event as any).length > 0) ? event[0] : event);
   }
 
   /**
@@ -112,8 +114,9 @@ export class BaseModel {
       queryRelationProperties: '',
       querySetProperties: '',
     };
-    // skip push below fields, this are used in ON CREATE
-    const skipPushQueryFields = ['blockNumber', 'transactionId', 'transactionStatus', 'transactionEvent'];
+
+    // skip push below fields to skipPushQuerySetFields
+    const skipPushQuerySetFields = ['blockNumber', 'transactionId', 'status', 'event'];
     // temp object to save queryRelation object with non empty properties
     const relationObject = {};
     const props = Object.entries(this);
@@ -169,14 +172,13 @@ export class BaseModel {
           });
         } else {
           if (this[k]) {
+            decoratedProperties.queryFields.push(`${fieldName}: $${k}`);
             // skip transaction fields on queryFields (insert)
-            const skipPush = skipPushQueryFields.includes(k);
-            if (!skipPush) {
-              decoratedProperties.queryFields.push(`${fieldName}: $${k}`);
-            };
-            // push if exists in payloadPropKeys array, or payloadPropKeys is empty (add all)
-            if (payloadPropKeys.length === 0 || payloadPropKeys.indexOf(fieldName) > -1) {
-              decoratedProperties.querySetFields.push(`n.${fieldName}=$${k}`);
+            if (!skipPushQuerySetFields.includes(k)) {
+              // push if exists in payloadPropKeys array, or payloadPropKeys is empty (add all)
+              if (payloadPropKeys.length === 0 || payloadPropKeys.indexOf(fieldName) > -1) {
+                decoratedProperties.querySetFields.push(`n.${fieldName}=$${k}`);
+              }
             }
             // decoratedProperties.queryRelationProperties.push(`${fieldName}: $${k}`);
           }
@@ -216,26 +218,11 @@ export class BaseModel {
     const cypher = `
       MERGE 
         (n:${this.constructor.name} { ${queryFields} })
-      ON CREATE SET
-        n.blockNumber=$blockNumber,
-        n.transactionId=$transactionId,
-        n.transactionStatus=$status,
-        n.transactionEvent=$event
       RETURN 
         ${queryReturnFields}
     `;
     writeTransaction.push({ cypher, params: this });
     this.linkToGenesis(writeTransaction);
-    // if (LINK_TO_GENESIS_MODELS.includes(this.constructor.name)) {
-    //   const cypher = `
-    //     MATCH 
-    //       (g {id: $genesisBlockId}),
-    //       (n:${this.constructor.name} {id:$id})
-    //     MERGE
-    //       (n)-[r:CONNECTED]->(g)
-    //   `;
-    //   writeTransaction.push({ cypher, params: { id: this.id, genesisBlockId: NODE_ID_GENESIS_BLOCK } });
-    // }
     const txResult = await neo4jService.writeTransaction(writeTransaction);
     // TODO: deprecated old write without transactions
     // // Logger.debug(cypher, BaseModel.name);

@@ -47,7 +47,7 @@ export class NetworkEventActions {
         Logger.debug(`Received Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`, NetworkEventActions.name);
         // Logger.debug(JSON.stringify(payload, undefined, 2), ChaincodeEventActions.name);
         // delegateEvent
-        this.delegateChaincodeEvent(
+        await this.delegateChaincodeEvent(
           eventEnum,
           payload,
           event,
@@ -61,7 +61,7 @@ export class NetworkEventActions {
     });
   }
 
-  private delegateChaincodeEvent(
+  private async delegateChaincodeEvent(
     eventEnum: ChaincodeEvent,
     payload: any,
     event?: Client.ChaincodeEvent | Client.ChaincodeEvent[],
@@ -78,7 +78,7 @@ export class NetworkEventActions {
     };
     // compose dynamic function with closure bind
     const delegateTo: ChaincodeEventActionFunction = this[`chaincodeEventAction${eventEnum}`].bind(this);
-    delegateTo(eventActionArgs);
+    await delegateTo(eventActionArgs);
   }
 
   private async chaincodeEventActionAssetCreatedEvent({ payload, blockNumber, transactionId, status, event }: ChaincodeEventActionArguments): Promise<any> {
