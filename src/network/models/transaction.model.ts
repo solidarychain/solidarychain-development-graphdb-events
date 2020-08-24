@@ -79,7 +79,7 @@ export class Transaction extends BaseModel {
         (a:${inputType} {id: $input.entity.id}),
         (b:${this.constructor.name} {id: $id}),
         (c:${outputType} {id: $output.entity.id})
-      CREATE
+      MERGE
         (a)-[:${GraphLabelRelationship.CREATE}]->(b)-[:${GraphLabelRelationship.TO_ENTITY}]->(c)
       `;
     writeTransaction.push({ cypher: relationCypher, params: this });

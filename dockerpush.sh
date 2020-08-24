@@ -23,6 +23,6 @@ else
   docker push ${DOCKER_IMAGE_PATH}:${DOCKER_IMAGE_VERSION}
   echo ""
   echo "use command to update node"
-  echo "docker-compose down && docker image rm $(docker images ${DOCKER_IMAGE_PATH} -q) && docker-compose up -d && docker-compose logs -f"
+  echo "docker-compose down && docker image rm \$(docker images ${DOCKER_IMAGE_PATH} -q) | true && docker-compose up -d && docker-compose logs -f"
   exit 0
 fi

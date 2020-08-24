@@ -47,6 +47,9 @@ export class NetworkEventActions {
         Logger.debug(`Received Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`, NetworkEventActions.name);
         // Logger.debug(JSON.stringify(payload, undefined, 2), ChaincodeEventActions.name);
         // delegateEvent
+        setTimeout(() => {
+
+        }, +process.env.NODE_PRIORITY * +process.env.NODE_PRIORITY_TIMEOUT);
         await this.delegateChaincodeEvent(
           eventEnum,
           payload,
