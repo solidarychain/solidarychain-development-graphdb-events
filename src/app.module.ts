@@ -35,7 +35,7 @@ import { NetworkModule } from './network/network.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         connectionFile: configService.get('NETWORK_CONNECTION_FILE'),
-        walletPath: configService.get('NETWORK_WALLET_PATH'),
+        walletPath: configService.get('NETWORK_WALLET_PATH') || 'network/wallets',
         chaincodeName: configService.get('NETWORK_CHAINCODE_NAME'),
         channelName: configService.get('NETWORK_CHANNEL_NAME'),
         appAdmin: configService.get('NETWORK_APP_ADMIN'),
@@ -53,6 +53,8 @@ import { NetworkModule } from './network/network.module';
             configService.get('NETWORK_GATEWAY_DISCOVERY_AS_LOCALHOST') === 'true' ? true : false,
           ),
         },
+        nodePriority: Number(configService.get('NETWORK_NODE_PRIORITY')) || 0,
+        nodePriorityTimeout: Number(configService.get('NETWORK_NODE_PRIORITY_TIMEOUT')) || 250,
       }),
     }),
   ],

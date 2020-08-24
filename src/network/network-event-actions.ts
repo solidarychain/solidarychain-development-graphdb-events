@@ -7,6 +7,7 @@ import { Asset, Cause, Person, Transaction } from './models';
 import { Participant } from './models/participant.model';
 import { ChaincodeEvent } from './network.enums';
 import { ChaincodeEventActionArguments, ChaincodeEventActionFunction } from './network.types';
+import { NetworkConfig } from './network-config.interface';
 
 // type ChaincodeEventFunction = (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => any;
 
@@ -15,6 +16,7 @@ export class NetworkEventActions {
   constructor(
     private readonly contract: Contract,
     private readonly neo4jService: Neo4jService,
+    private readonly config: NetworkConfig,
   ) {
     this.addContractListener();
   }
@@ -44,20 +46,19 @@ export class NetworkEventActions {
         // don't need to use wait here, use it asyncrounous to not block addContractListener
         writeJsonToFile(`${process.env.NETWORK_SAVE_EVENTS_PATH}/${blockNumber.toString().padStart(12, '0')}.${transactionId}.json`, JSON.stringify(data, undefined, 2))
           .catch((error) => Logger.error(error, NetworkEventActions.name));
-        Logger.debug(`Received Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`, NetworkEventActions.name);
+        Logger.debug(`Node Received Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}, Node priority: ${this.config.nodePriority}`, NetworkEventActions.name);
         // Logger.debug(JSON.stringify(payload, undefined, 2), ChaincodeEventActions.name);
-        // delegateEvent
-        setTimeout(() => {
-
-        }, +process.env.NODE_PRIORITY * +process.env.NODE_PRIORITY_TIMEOUT);
-        await this.delegateChaincodeEvent(
-          eventEnum,
-          payload,
-          event,
-          blockNumber,
-          transactionId,
-          status,
-        );
+        setTimeout(async () => {
+          // delegateEvent
+          await this.delegateChaincodeEvent(
+            eventEnum,
+            payload,
+            event,
+            blockNumber,
+            transactionId,
+            status,
+          );
+        }, this.config.nodePriority * this.config.nodePriorityTimeout);
       },
     ).catch((error) => {
       Logger.error(error, NetworkEventActions.name);

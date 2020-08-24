@@ -16,4 +16,6 @@ export interface NetworkConfig {
   orderer: string;
   peerIdentity: string;
   gatewayDiscovery: GatewayDiscovery;
+  nodePriority: number;
+  nodePriorityTimeout: number;
 }

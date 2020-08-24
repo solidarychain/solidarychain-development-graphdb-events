@@ -4,7 +4,6 @@ import { Neo4jConfig } from './neo4j-config.interface';
 import { Neo4jModule } from './neo4j.module';
 
 export const createDriver = async (config: Neo4jConfig): Promise<Driver> => {
-  debugger;
   const uri = `${config.scheme}://${config.host}:${config.port}`;
   Logger.log(`neo4j createDriver uri: ${uri}`, Neo4jModule.name);
   const driver: Driver = neo4j.driver(
