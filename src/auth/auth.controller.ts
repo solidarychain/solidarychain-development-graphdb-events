@@ -1,19 +1,23 @@
-import { Controller, HttpStatus, Post, Request, Response } from '@nestjs/common';
+import { Controller, HttpStatus, Inject, Post, Request, Response } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { GqlContextPayload } from '../common/types';
-import { envVariables as e } from '../common/env';
-import { UsersService } from '../user/user.service';
-import { AuthService } from './auth.service';
-import { AccessToken } from './models';
 import { LoginUserInput } from '../user/dto';
 import { User } from '../user/models';
+import { UsersService } from '../user/user.service';
+import { AuthConfig } from './auth-config.interface';
+import { AuthService } from './auth.service';
+import { AccessToken } from './models';
+import { AUTH_CONFIG } from './auth.constants';
 
 @Controller()
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    // here @Inject(Class) is optional, but will use it to be consistnt with AuthConfig
+    @Inject(AuthService) private readonly authService: AuthService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
+    @Inject(UsersService) private readonly usersService: UsersService,
+    // require to use @Inject(AUTH_CONFIG)
+    @Inject(AUTH_CONFIG) private readonly config: AuthConfig,
   ) { }
   // for security purposes, refreshToken cookie only works in this specific route,
   // to request a new accessToken, this prevent /graphql to works with cookie
@@ -35,7 +39,9 @@ export class AuthController {
 
     let payload: GqlContextPayload;
     try {
-      payload = this.jwtService.verify(token, e.refreshTokenJwtSecret);
+      payload = this.jwtService.verify(token, this.config.refreshTokenJwtSecret);
+      // TODO: clean up bellow line
+      // payload = this.jwtService.verify(token, e.refreshTokenJwtSecret);
     } catch (error) {
       // Logger.log(error);
       return invalidPayload();

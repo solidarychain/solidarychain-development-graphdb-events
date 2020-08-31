@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
@@ -7,12 +7,16 @@ import { envVariables as e } from '../common/env';
 import { GqlContextPayload } from '../common/types';
 import { UsersService } from '../user/user.service';
 import AccessToken from './types/access-token';
+import { AUTH_CONFIG } from './auth.constants';
+import { AuthConfig } from './auth-config.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
+    @Inject(UsersService) private readonly usersService: UsersService,
+    // require to use @Inject(AUTH_CONFIG)
+    @Inject(AUTH_CONFIG) private readonly config: AuthConfig,
   ) { }
   // called by GqlLocalAuthGuard
   async validateUser(username: string, pass: string): Promise<any> {
@@ -43,7 +47,7 @@ export class AuthService {
     const payload = { username: user.username, sub: user.userId, roles: user.roles, tokenVersion };
     return {
       // generate JWT from a subset of the user object properties
-      accessToken: this.jwtService.sign(payload, { ...options, expiresIn: e.refreshTokenExpiresIn }),
+      accessToken: this.jwtService.sign(payload, { ...options, expiresIn: this.config.refreshTokenExpiresIn }),
     };
   }
 
