@@ -1,15 +1,81 @@
-import { Module, Logger } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { AuthenticationError } from 'apollo-server-core';
+import { ConnectionParams } from 'subscriptions-transport-ws';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { envVariables as e } from './common/env';
+import { GqlContext, GqlContextPayload } from './common/types';
+import { mapKeysToLowerCase } from './common/utils';
 import { Neo4jModule } from './neo4j/neo4j.module';
 import { NetworkModule } from './network/network.module';
+import { UsersModule } from './user/user.module';
 
 @Module({
   imports: [
+    // config module
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    // AuthModule,
+    // auth module
+    AuthModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        // TODO: use thie vars in auth module
+        accessTokenJwtSecret: configService.get('ACCESS_TOKEN_JWT_SECRET'),
+        accessTokenExpiresIn: configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+        refreshTokenJwtSecret: configService.get('REFRESH_TOKEN_JWT_SECRET'),
+        refreshTokenExpiresIn: configService.get('REFRESH_TOKEN_EXPIRES_IN'),
+        refreshTokenSkipIncrementVersion: configService.get('REFRESH_TOKEN_SKIP_INCREMENT_VERSION'),
+      }),
+    }),
+    // users Module
+    UsersModule,
+    // apolloServer config: use forRootAsync to import AuthModule and inject AuthService
+    GraphQLModule.forRootAsync({
+      // import AuthModule
+      imports: [AuthModule],
+      // inject authService
+      useFactory: async (authService: AuthService) => ({
+        debug: true,
+        playground: true,
+        installSubscriptionHandlers: true,
+        autoSchemaFile: 'schema.gql',
+        // pass the original req and res object into the graphql context,
+        // get context with decorator `@Context() { req, res, payload, connection }: GqlContext`
+        // req, res used in http/query&mutations, connection used in webSockets/subscriptions
+        context: ({ req, res, payload, connection }: GqlContext) => ({ req, res, payload, connection }),
+        // configure graphql cors here
+        cors: {
+          origin: e.corsOriginReactFrontend,
+          credentials: true,
+        },
+        // subscriptions/webSockets authentication
+        subscriptions: {
+          // get headers
+          onConnect: (connectionParams: ConnectionParams) => {
+            // convert header keys to lowercase
+            const connectionParamsLowerKeys = mapKeysToLowerCase(connectionParams);
+            // get authToken from authorization header
+            const authToken: string = ('authorization' in connectionParamsLowerKeys)
+              && connectionParamsLowerKeys.authorization.split(' ')[1];
+            if (authToken) {
+              // verify authToken/getJwtPayLoad
+              const jwtPayload: GqlContextPayload = authService.getJwtPayLoad(authToken);
+              // the user/jwtPayload object found will be available as context.currentUser/jwtPayload in your GraphQL resolvers
+              return { currentUser: jwtPayload.username, jwtPayload, headers: connectionParamsLowerKeys };
+            }
+            throw new AuthenticationError('authToken must be provided');
+          },
+        },
+      }),
+      // inject: AuthService
+      inject: [AuthService],
+    }),
+    // neo4j    
     Neo4jModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -30,6 +96,7 @@ import { NetworkModule } from './network/network.module';
         }
       }),
     }),
+    // fabric network
     NetworkModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -55,10 +122,10 @@ import { NetworkModule } from './network/network.module';
         },
         nodePriority: Number(configService.get('NETWORK_NODE_PRIORITY')) || 0,
         nodePriorityTimeout: Number(configService.get('NETWORK_NODE_PRIORITY_TIMEOUT')) || 250,
+        saveEventsPath: configService.get('NETWORK_SAVE_EVENTS_PATH'),
       }),
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
+
 export class AppModule { }

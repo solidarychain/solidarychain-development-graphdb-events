@@ -44,7 +44,7 @@ export class NetworkEventActions {
         payload = JSON.parse(payload as any);
         const data = { blockNumber, transactionId, status, event: eventEnum, payload };
         // don't need to use wait here, use it asyncrounous to not block addContractListener
-        writeJsonToFile(`${process.env.NETWORK_SAVE_EVENTS_PATH}/${blockNumber.toString().padStart(12, '0')}.${transactionId}.json`, JSON.stringify(data, undefined, 2))
+        writeJsonToFile(`${this.config.saveEventsPath}/${blockNumber.toString().padStart(12, '0')}.${transactionId}.json`, JSON.stringify(data, undefined, 2))
           .catch((error) => Logger.error(error, NetworkEventActions.name));
         // Logger.debug(JSON.stringify(payload, undefined, 2), ChaincodeEventActions.name);
         Logger.debug(`Node Received Event: ${eventName}, Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}, Node priority/delay: ${this.config.nodePriority}/${this.config.nodePriority * this.config.nodePriorityTimeout}ms`, NetworkEventActions.name);

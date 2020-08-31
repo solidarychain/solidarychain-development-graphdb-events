@@ -18,4 +18,5 @@ export interface NetworkConfig {
   gatewayDiscovery: GatewayDiscovery;
   nodePriority: number;
   nodePriorityTimeout: number;
+  saveEventsPath: string,
 }
