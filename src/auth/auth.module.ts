@@ -3,7 +3,7 @@ import { Provider, DynamicModule, MiddlewareConsumer, Module } from '@nestjs/com
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { envVariables as e } from '../common/env';
-import { UsersModule } from '../user/user.module';
+import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
@@ -23,7 +23,7 @@ export class AuthModule {
       global: true,
       imports: [
         ConfigModule,
-        UsersModule,
+        UserModule,
         // not used because we use a class based strategy GqlAuthGuard
         // configure the JwtModule using register(), passing configuration object, and register a default strategy
         // PassportModule.register({

@@ -2,7 +2,7 @@
 
 ## TLDR
 
-project use `node/v10.12.0` version, else `fs-extra/lib/mkdirs/make-dir.js:86`
+project use `node/v12.8.1` version, else `fs-extra/lib/mkdirs/make-dir.js:86`
 
 ## Links
 
@@ -221,3 +221,21 @@ SHOW DATABASES;
 │"system"│"neo4j.koakh.com:7687"│"standalone"│"online"         │"online"       │""     │false    │
 └────────┴──────────────────────┴────────────┴─────────────────┴───────────────┴───────┴─────────┘
 ```
+
+## Dependency Injection 
+
+```typescript
+export class AuthController {
+  constructor(
+    // require to use @Inject(AUTH_CONFIG)
+    @Inject(AUTH_CONFIG) private readonly config: AuthConfig,
+    // here @Inject(Class) is optional
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
+  ) { }
+```
+
+> `@Inject(AUTH_CONFIG)` is required, else DI can't find AuthConfig to inject
+
+> last update: find that network module and service inject config without the need for `@inject`, can't know how, but seems that is related to using `inject: [NETWORK_CONFIG]`

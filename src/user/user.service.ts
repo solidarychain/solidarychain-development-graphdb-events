@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { UserStore } from './user.store';
 import { appConstants as c } from '../common/constants';
 import { User } from './models';
@@ -8,13 +8,24 @@ import { PaginationArgs } from '../common/dto';
 import { NewUserInput } from './dto/new-user.input';
 import { hashPassword } from '../auth/utils';
 import { newUuid } from '../common/utils';
+import { Neo4jService } from '../neo4j/neo4j.service';
+import { UserConfig } from './user-config.interface';
+import { USER_CONFIG } from './user.constants';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   // init usersStore
   usersStore: UserStore = new UserStore();
 
-  constructor() { }
+  constructor(
+    // require to use @Inject(USER_CONFIG)
+    @Inject(USER_CONFIG) private readonly config: UserConfig,
+    // here @Inject(Class) is optional
+    private readonly neo4jService: Neo4jService,
+  ) { 
+    debugger;
+    console.log('debug');
+  }
 
   async findAll(paginationArgs: PaginationArgs): Promise<User[]> {
     // clone array before slice it

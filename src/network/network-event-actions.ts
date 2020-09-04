@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import * as Client from 'fabric-client';
 import { Contract } from 'fabric-network';
-import { getEnumKeyFromEnumValue, writeJsonToFile } from 'src/main.util';
-import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { getEnumKeyFromEnumValue, writeJsonToFile } from '../main.util';
+import { Neo4jService } from '../neo4j/neo4j.service';
 import { Asset, Cause, Person, Transaction } from './models';
 import { Participant } from './models/participant.model';
 import { ChaincodeEvent } from './network.enums';
@@ -14,9 +14,9 @@ import { NetworkConfig } from './network-config.interface';
 // define class method ChaincodeEvents to manage socket generic actions
 export class NetworkEventActions {
   constructor(
+    private readonly config: NetworkConfig,
     private readonly contract: Contract,
     private readonly neo4jService: Neo4jService,
-    private readonly config: NetworkConfig,
   ) {
     this.addContractListener();
   }

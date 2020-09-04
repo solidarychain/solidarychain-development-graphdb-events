@@ -1,5 +1,5 @@
-import { getEnumKeyFromEnumValue } from 'src/main.util';
-import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { getEnumKeyFromEnumValue } from '../../main.util';
+import { Neo4jService } from '../../neo4j/neo4j.service';
 import { Persisted, Properties } from '../decorators';
 import { AssetType, GraphLabelRelationship, ModelType } from '../network.enums';
 import { Entity, WriteTransaction } from '../network.types';

@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { QueryResult } from 'neo4j-driver/types/result';
 import 'reflect-metadata';
-import { getEnumKeyFromEnumValue, removeEmpty } from 'src/main.util';
-import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { getEnumKeyFromEnumValue, removeEmpty } from '../../main.util';
+import { Neo4jService } from '../../neo4j/neo4j.service';
 import { getProperties, Persisted, PersistedUsingInstance, Properties } from '../decorators';
 import { LINK_TO_GENESIS_MODELS, NODE_ID_GENESIS_BLOCK } from '../network.constants';
 import { ChaincodeEvent, ModelType } from '../network.enums';

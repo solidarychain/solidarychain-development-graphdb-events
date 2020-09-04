@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 import { AccessToken, UserLoginResponse } from './models';
 import { GqlLocalAuthGuard } from './guards';
 import { GqlContext } from '../common/types';
-import { UsersService } from '../user/user.service';
+import { UserService } from '../user/user.service';
 import { SubscriptionEvent } from '../common/types';
 import { LoginUserInput, NewUserInput } from '../user/dto';
 import { User } from '../user/models';
@@ -21,22 +21,22 @@ const pubSub = new PubSub();
 export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
   ) { }
   // unprotected method, person register don't use createdByUserId
   @Mutation(returns => User)
   async userRegister(
     @Args('newUserData') newUserData: NewUserInput,
   ): Promise<User> {
-    const checkUsername = await this.usersService.findOneByField('username', newUserData.username);
+    const checkUsername = await this.userService.findOneByField('username', newUserData.username);
     if (checkUsername) {
       throw new ConflictException(`this username is already been taken by other user, please try another`);
     }
-    const checkEmail = await this.usersService.findOneByField('email', newUserData.email);
+    const checkEmail = await this.userService.findOneByField('email', newUserData.email);
     if (checkEmail) {
       throw new ConflictException(`this email is already been taken by other user, please try another`);
     }
-    const user = await this.usersService.create(newUserData);
+    const user = await this.userService.create(newUserData);
     pubSub.publish(SubscriptionEvent.userAdded, { [SubscriptionEvent.userAdded]: user });
     return user;
   }
@@ -50,14 +50,14 @@ export class AuthResolver {
     // publish userLogged subscription
     pubSub.publish(SubscriptionEvent.userLogged, { [SubscriptionEvent.userLogged]: loginUserData.username });
     // get user
-    const user: User = await this.usersService.findOneByUsername(loginUserData.username);
+    const user: User = await this.userService.findOneByUsername(loginUserData.username);
     // accessToken: add some user data to it, like id and roles
     const signJwtTokenDto = { ...loginUserData, userId: user.id, roles: user.roles };
     const { accessToken } = await this.authService.signJwtToken(signJwtTokenDto);
     // assign jwt Payload to context
     payload = this.authService.getJwtPayLoad(accessToken);
     // get incremented tokenVersion
-    const tokenVersion = this.usersService.usersStore.incrementTokenVersion(loginUserData.username);
+    const tokenVersion = this.userService.usersStore.incrementTokenVersion(loginUserData.username);
     // refreshToken
     const refreshToken: AccessToken = await this.authService.signRefreshToken(signJwtTokenDto, tokenVersion);
     // send jid cookie refresh token to client (browser, insomnia etc)
@@ -83,7 +83,7 @@ export class AuthResolver {
   ): Promise<boolean> {
     // invalidate user tokens increasing tokenVersion, this way last tokenVersion of refreshToken will be invalidate
     // when user tries to use it in /refresh-token and current version is greater than refreshToken.tokenVersion
-    this.usersService.usersStore.incrementTokenVersion(username);
+    this.userService.usersStore.incrementTokenVersion(username);
     return true;
   }
 

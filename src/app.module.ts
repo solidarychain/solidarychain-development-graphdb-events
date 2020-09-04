@@ -10,7 +10,7 @@ import { GqlContext, GqlContextPayload } from './common/types';
 import { mapKeysToLowerCase } from './common/utils';
 import { Neo4jModule } from './neo4j/neo4j.module';
 import { NetworkModule } from './network/network.module';
-import { UsersModule } from './user/user.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -18,23 +18,6 @@ import { UsersModule } from './user/user.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // AuthModule,
-    // auth module
-    AuthModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        // TODO: use thie vars in auth module
-        accessTokenJwtSecret: configService.get('ACCESS_TOKEN_JWT_SECRET'),
-        accessTokenExpiresIn: configService.get('ACCESS_TOKEN_EXPIRES_IN'),
-        refreshTokenJwtSecret: configService.get('REFRESH_TOKEN_JWT_SECRET'),
-        refreshTokenExpiresIn: configService.get('REFRESH_TOKEN_EXPIRES_IN'),
-        refreshTokenSkipIncrementVersion: configService.get('REFRESH_TOKEN_SKIP_INCREMENT_VERSION'),
-      }),
-    }),
-    // users Module
-    UsersModule,
-    // apolloServer config: use forRootAsync to import AuthModule and inject AuthService
     GraphQLModule.forRootAsync({
       // import AuthModule
       imports: [AuthModule],
@@ -74,6 +57,34 @@ import { UsersModule } from './user/user.module';
       }),
       // inject: AuthService
       inject: [AuthService],
+    }),    
+    // apolloServer config: use forRootAsync to import AuthModule and inject AuthService
+    // old without ConfigService
+    // AuthModule,
+    // auth module
+    AuthModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        // TODO: use thie vars in auth module
+        accessTokenJwtSecret: configService.get('ACCESS_TOKEN_JWT_SECRET'),
+        accessTokenExpiresIn: configService.get('ACCESS_TOKEN_EXPIRES_IN'),
+        refreshTokenJwtSecret: configService.get('REFRESH_TOKEN_JWT_SECRET'),
+        refreshTokenExpiresIn: configService.get('REFRESH_TOKEN_EXPIRES_IN'),
+        refreshTokenSkipIncrementVersion: configService.get('REFRESH_TOKEN_SKIP_INCREMENT_VERSION'),
+      }),
+    }),
+    // old without ConfigService
+    // UserModule,
+    // users Module
+    UserModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        useMokeData: Boolean(
+          configService.get('USER_SERVICE_USE_MOKE_DATA') === 'true' ? true : false,
+        ),
+      }),
     }),
     // neo4j    
     Neo4jModule.forRootAsync({

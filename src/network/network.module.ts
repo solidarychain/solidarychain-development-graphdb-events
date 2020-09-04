@@ -1,7 +1,7 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { Neo4jModule } from 'src/neo4j/neo4j.module';
-import { Neo4jService } from 'src/neo4j/neo4j.service';
+import { Neo4jModule } from '../neo4j/neo4j.module';
+import { Neo4jService } from '../neo4j/neo4j.service';
 import { NetworkConfig } from './network-config.interface';
 import { NetworkConnection } from './network-connection';
 import { NETWORK_CONFIG, NETWORK_CONNECTION } from './network.constants';

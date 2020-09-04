@@ -3,9 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { SignOptions } from 'jsonwebtoken';
-import { envVariables as e } from '../common/env';
 import { GqlContextPayload } from '../common/types';
-import { UsersService } from '../user/user.service';
+import { UserService } from '../user/user.service';
 import AccessToken from './types/access-token';
 import { AUTH_CONFIG } from './auth.constants';
 import { AuthConfig } from './auth-config.interface';
@@ -13,14 +12,15 @@ import { AuthConfig } from './auth-config.interface';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(JwtService) private readonly jwtService: JwtService,
-    @Inject(UsersService) private readonly usersService: UsersService,
     // require to use @Inject(AUTH_CONFIG)
     @Inject(AUTH_CONFIG) private readonly config: AuthConfig,
+    // here @Inject(Class) is optional
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) { }
   // called by GqlLocalAuthGuard
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneByUsername(username);
+    const user = await this.userService.findOneByUsername(username);
     if (user) {
       const authorized = this.bcryptValidate(pass, user.password);
       if (authorized) {

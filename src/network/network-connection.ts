@@ -48,9 +48,9 @@ export class NetworkConnection {
     this.contract = await this.network.getContract(this.config.chaincodeName);
     // init events
     this.chaincodeEventActions = new NetworkEventActions(
+      this.config,
       this.contract,
       this.neo4jService,
-      this.config,
     );
   }
 

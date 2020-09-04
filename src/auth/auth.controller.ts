@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { GqlContextPayload } from '../common/types';
 import { LoginUserInput } from '../user/dto';
 import { User } from '../user/models';
-import { UsersService } from '../user/user.service';
+import { UserService } from '../user/user.service';
 import { AuthConfig } from './auth-config.interface';
 import { AuthService } from './auth.service';
 import { AccessToken } from './models';
@@ -12,12 +12,12 @@ import { AUTH_CONFIG } from './auth.constants';
 @Controller()
 export class AuthController {
   constructor(
-    // here @Inject(Class) is optional, but will use it to be consistnt with AuthConfig
-    @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(JwtService) private readonly jwtService: JwtService,
-    @Inject(UsersService) private readonly usersService: UsersService,
     // require to use @Inject(AUTH_CONFIG)
     @Inject(AUTH_CONFIG) private readonly config: AuthConfig,
+    // here @Inject(Class) is optional
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) { }
   // for security purposes, refreshToken cookie only works in this specific route,
   // to request a new accessToken, this prevent /graphql to works with cookie
@@ -48,14 +48,14 @@ export class AuthController {
     }
 
     // token is valid, send back accessToken
-    const user: User = await this.usersService.findOneByUsername(payload.username);
+    const user: User = await this.userService.findOneByUsername(payload.username);
     // check jid token
     if (!user) {
       return invalidPayload();
     }
 
     // check inMemory tokenVersion
-    const tokenVersion: number = this.usersService.usersStore.getTokenVersion(user.username);
+    const tokenVersion: number = this.userService.usersStore.getTokenVersion(user.username);
     if (tokenVersion !== payload.tokenVersion) {
       return invalidPayload();
     }
