@@ -65,7 +65,6 @@ import { NetworkModule } from './network/network.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        // TODO: use thie vars in auth module
         accessTokenJwtSecret: configService.get('ACCESS_TOKEN_JWT_SECRET'),
         accessTokenExpiresIn: configService.get('ACCESS_TOKEN_EXPIRES_IN'),
         refreshTokenJwtSecret: configService.get('REFRESH_TOKEN_JWT_SECRET'),

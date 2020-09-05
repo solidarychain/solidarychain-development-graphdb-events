@@ -1,6 +1,5 @@
 import { Persisted, Properties } from '../decorators';
 import { GenericBalance } from './classes/generic-balance';
-// import { BaseModel, Participant } from './index';
 import { BaseModel } from './base.model';
 import { Participant } from './participant.model';
 
@@ -25,7 +24,7 @@ export class Good extends BaseModel {
   // @Properties({ map: [{ debit: 'balanceDebit' }, { credit: 'balanceCredit' }, { balance: 'balanceBalance' }] })
   balance?: GenericBalance;
 
-  // don't put in base, else we hav circular dependency problems
+  // don't put in base, else we have circular dependency problems
   @Persisted
   @Properties({ map: [{ id: 'participantId' }] })
   participant: Participant;

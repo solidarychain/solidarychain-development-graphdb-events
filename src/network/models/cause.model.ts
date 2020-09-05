@@ -1,7 +1,6 @@
 import { Persisted, Properties } from '../decorators';
 import { Entity } from '../types';
 import { GenericBalance } from './classes';
-// import { Good, Participant, BaseModel } from './index';
 import { BaseModel } from './base.model';
 import { Good } from './good.model';
 import { Participant } from './participant.model';

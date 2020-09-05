@@ -1,19 +1,13 @@
-import { ConflictException, NotFoundException, UseGuards } from '@nestjs/common';
-import { Args, Query, Mutation, Resolver, Subscription, Context } from '@nestjs/graphql';
-// DEPRECATED docs now use graphql-subscriptions 
+import { ConflictException, UseGuards } from '@nestjs/common';
+import { Args, Context, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-// TODO: remove after finish subscriptions
-// import { PubSub } from 'graphql-subscriptions';
-import { AuthService } from './auth.service';
-import { AccessToken, UserLoginResponse } from './models';
-import { GqlLocalAuthGuard } from './guards';
-import { GqlContext } from '../common/types';
-import { UserService } from '../user/user.service';
-import { SubscriptionEvent } from '../common/types';
+import { GqlContext, SubscriptionEvent } from '../common/types';
 import { LoginUserInput, NewUserInput } from '../user/dto';
 import { User } from '../user/models';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { PaginationArgs } from '../common/dto';
+import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
+import { GqlLocalAuthGuard } from './guards';
+import { AccessToken, UserLoginResponse } from './models';
 
 const pubSub = new PubSub();
 

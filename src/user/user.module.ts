@@ -4,7 +4,6 @@ import { UserService } from './user.service';
 import { Neo4jModule } from '../neo4j/neo4j.module';
 import { UserResolver } from './user.resolver';
 import { USER_CONFIG } from './user.constants';
-// import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Module({})
 export class UserModule {

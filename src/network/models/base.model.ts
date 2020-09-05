@@ -6,7 +6,10 @@ import { getEnumKeyFromEnumValue, removeEmpty } from '../../common';
 import { Neo4jService } from '../../neo4j/neo4j.service';
 import { getProperties, Persisted, PersistedUsingInstance, Properties } from '../decorators';
 import { ChaincodeEvent, ChaincodeEventActionArguments, DecoratedProperties, ModelType, WriteTransaction } from '../types';
-import { LINK_TO_GENESIS_MODELS, NODE_ID_GENESIS_BLOCK } from '../network.constants';
+// better to use strings here to prevent circular dependencies!
+// import { LINK_TO_GENESIS_MODELS, NODE_ID_GENESIS_BLOCK } from '../network.constants';
+const LINK_TO_GENESIS_MODELS = ['Asset', 'Cause', 'Participant', 'Person'];
+const NODE_ID_GENESIS_BLOCK = '00000000-0000-0000-0000-000000000000';
 
 export class BaseModel {
   public type: string;
