@@ -6,7 +6,6 @@ import { httpsOptions } from './config';
 
 async function bootstrap() {
   debugger;
-
   const app = await NestFactory.create(AppModule, { httpsOptions });
   // initDirectories
   await initDirectories([e.networkSaveEventsPath])
