@@ -294,7 +294,7 @@ export const userData: UserData[] = [{
 }];
 
 @Injectable()
-export class UserMokejRepository implements UserRepository {
+export class UserMokeRepository implements UserRepository {
   async findAll(paginationArgs: PaginationArgs): Promise<User[]> {
     // clone array before slice it
     const data = userData.slice();

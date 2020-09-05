@@ -2,16 +2,15 @@ import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/c
 import { UserConfig } from 'fabric-client';
 import { appConstants as c } from '../common/constants';
 import { PaginationArgs } from '../common/dto';
-import { Neo4jService } from '../neo4j/neo4j.service';
 import { NewUserInput } from './dto/new-user.input';
 import { UserRepository } from './interfaces';
 import { User } from './models';
 import { USER_CONFIG } from './user.constants';
-import { UserMokejRepository } from './user.moke.repository';
+import { UserNeo4jRepository } from './user.neo4j.repository';
 import { UserStore } from './user.store';
 
 @Injectable()
-export class UserService implements UserRepository{
+export class UserService implements UserRepository {
   // init usersStore
   usersStore: UserStore = new UserStore();
 
@@ -19,13 +18,8 @@ export class UserService implements UserRepository{
     // require to use @Inject(USER_CONFIG)
     @Inject(USER_CONFIG) private readonly config: UserConfig,
     // here @Inject(Class) is optional
-    private readonly neo4jService: Neo4jService,
-    private readonly userRepository: UserMokejRepository,
-    // private readonly userNeo4jRepository: UserNeo4jRepository,
-  ) { 
-    debugger;
-    console.log('debug');
-  }
+    private readonly userRepository: UserNeo4jRepository,
+  ) { }
 
   async findAll(paginationArgs: PaginationArgs): Promise<User[]> {
     try {

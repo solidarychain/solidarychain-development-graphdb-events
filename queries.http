@@ -5,9 +5,10 @@
 @contentType = application/json
 @requestType = GraphQL
 
-@userLoginUsername = admin
+@userLoginUsername = janedoe
 @userLoginPassword = 12345678
 @userIdAdmin = efeed3eb-c0a2-4b3e-816f-2a42ca8451b3
+@someUser = 4ea88521-031b-4279-9165-9c10e1838010
 
 ### mutation: userLogin
 
@@ -147,7 +148,7 @@ query userById($id: String!){
 }
 
 {
-  "id": "{{userIdAdmin}}"
+  "id": "{{someUser}}"
 }
 
 ### rest request

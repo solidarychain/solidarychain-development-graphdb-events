@@ -87,3 +87,23 @@ export const removeEmpty = obj => {
   );
   return obj;
 };
+
+/**
+ * ES7 / 2016 map object to other object, keep only target properties from source object
+ * @param source object
+ * @param target object
+ */
+export const mapToObjectAndKeepProperties = (source: any, target: any) => {
+  Object.entries(source).forEach(
+    ([key, val]) => {
+      // if key exists in target and source as value
+      if (key in target && (
+        source[key] !== undefined && source[key] !== null && source[key] !== '')
+      ) {
+        // assign source value to target value
+        target[key] = val;
+      };
+    }
+  );
+  return removeEmpty(target);
+};

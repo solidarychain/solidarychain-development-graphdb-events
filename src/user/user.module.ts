@@ -4,7 +4,7 @@ import { UserService } from './user.service';
 import { Neo4jModule } from '../neo4j/neo4j.module';
 import { UserResolver } from './user.resolver';
 import { USER_CONFIG } from './user.constants';
-import { UserMokejRepository } from './user.moke.repository';
+import { UserNeo4jRepository } from './user.neo4j.repository';
 
 @Module({})
 export class UserModule {
@@ -19,13 +19,13 @@ export class UserModule {
       providers: [
         UserService,
         UserResolver,
-        UserMokejRepository,
+        UserNeo4jRepository,
         {
           provide: USER_CONFIG,
           ...configProvider,
         } as Provider<any>,
       ],
-      exports: [UserService, UserResolver, UserMokejRepository],
+      exports: [UserService, UserResolver, UserNeo4jRepository],
     };
   }
 }

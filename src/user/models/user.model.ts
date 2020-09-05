@@ -38,4 +38,18 @@ export class User {
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   metaData: any;
+
+  static new = (): User => {
+    return {
+      id: null,
+      username: null,
+      password: null,
+      firstName: null,
+      lastName: null,
+      email: null,
+      roles: [],
+      createdDate: new Date().getTime(),
+      metaData: {}
+    }
+  }
 }
