@@ -1,4 +1,7 @@
-import { Asset, Cause, Participant, Person } from "./models";
+import { Asset } from "./models/asset.model";
+import { Cause } from "./models/cause.model";
+import { Participant } from "./models/participant.model";
+import { Person } from "./models/person.model";
 
 // providers
 export const NETWORK_CONFIG = 'NETWORK_CONFIG';

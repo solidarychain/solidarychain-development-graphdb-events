@@ -1,10 +1,10 @@
-import { Module, DynamicModule, Provider, Logger } from '@nestjs/common';
-import { Neo4jService } from './neo4j.service';
-import { Neo4jConfig } from './neo4j-config.interface';
-import { NEO4J_CONFIG, NEO4J_DRIVER } from './neo4j.constants';
-import { createDriver } from './neo4j.util';
-import { Driver } from 'neo4j-driver';
+import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { Driver } from 'neo4j-driver';
+import { Neo4jConfig } from './interfaces';
+import { NEO4J_CONFIG, NEO4J_DRIVER } from './neo4j.constants';
+import { Neo4jService } from './neo4j.service';
+import { createDriver } from './neo4j.util';
 
 @Module({})
 export class Neo4jModule {

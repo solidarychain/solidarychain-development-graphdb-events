@@ -1,8 +1,7 @@
-import { getEnumKeyFromEnumValue } from '../../main.util';
+import { getEnumKeyFromEnumValue } from '../../common';
 import { Neo4jService } from '../../neo4j/neo4j.service';
 import { Persisted, Properties } from '../decorators';
-import { AssetType, GraphLabelRelationship, ModelType } from '../network.enums';
-import { Entity, WriteTransaction } from '../network.types';
+import { AssetType, Entity, GraphLabelRelationship, ModelType, WriteTransaction } from '../types';
 import { BaseModel } from './base.model';
 import { Participant } from './participant.model';
 
@@ -35,7 +34,7 @@ export class Asset extends BaseModel {
   })
   owner: Entity;
 
-  // don't put in base, else we hav circular dependency problems
+  // don't put in base, else we have circular dependency problems `class Asset extends index_1.BaseModel `
   @Persisted
   @Properties({ map: [{ id: 'participantId' }] })
   participant: Participant;

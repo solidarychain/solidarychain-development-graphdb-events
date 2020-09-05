@@ -7,9 +7,8 @@ import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
 import { AUTH_CONFIG } from './auth.constants';
+import { LocalStrategy, JwtStrategy } from './passport';
 
 @Module({})
 export class AuthModule {

@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import neo4j, { Driver } from 'neo4j-driver';
-import { Neo4jConfig } from './neo4j-config.interface';
+import { Neo4jConfig } from './interfaces';
 import { Neo4jModule } from './neo4j.module';
 
 export const createDriver = async (config: Neo4jConfig): Promise<Driver> => {

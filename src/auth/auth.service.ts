@@ -7,7 +7,7 @@ import { GqlContextPayload } from '../common/types';
 import { UserService } from '../user/user.service';
 import AccessToken from './types/access-token';
 import { AUTH_CONFIG } from './auth.constants';
-import { AuthConfig } from './auth-config.interface';
+import { AuthConfig } from './interfaces';
 
 @Injectable()
 export class AuthService {

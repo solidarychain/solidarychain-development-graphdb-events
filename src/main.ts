@@ -1,11 +1,12 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
-import { initDirectories } from './main.util';
+import { envVariables as e, initDirectories } from './common';
 import { httpsOptions } from './config';
-import { envVariables as e } from './common/env';
 
 async function bootstrap() {
+  debugger;
+
   const app = await NestFactory.create(AppModule, { httpsOptions });
   // initDirectories
   await initDirectories([e.networkSaveEventsPath])

@@ -1,13 +1,12 @@
 import { Logger } from '@nestjs/common';
-import { QueryResult } from 'neo4j-driver/types/result';
+import * as Client from 'fabric-client';
+import { QueryResult } from 'neo4j-driver/types';
 import 'reflect-metadata';
-import { getEnumKeyFromEnumValue, removeEmpty } from '../../main.util';
+import { getEnumKeyFromEnumValue, removeEmpty } from '../../common';
 import { Neo4jService } from '../../neo4j/neo4j.service';
 import { getProperties, Persisted, PersistedUsingInstance, Properties } from '../decorators';
+import { ChaincodeEvent, ChaincodeEventActionArguments, DecoratedProperties, ModelType, WriteTransaction } from '../types';
 import { LINK_TO_GENESIS_MODELS, NODE_ID_GENESIS_BLOCK } from '../network.constants';
-import { ChaincodeEvent, ModelType } from '../network.enums';
-import { ChaincodeEventActionArguments, DecoratedProperties, WriteTransaction } from '../network.types';
-import * as Client from 'fabric-client';
 
 export class BaseModel {
   public type: string;

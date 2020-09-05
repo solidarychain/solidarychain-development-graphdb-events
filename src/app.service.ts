@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { QueryResult } from 'neo4j-driver';
+import { MovieDto } from './neo4j/dto';
 import { Neo4jService } from './neo4j/neo4j.service';
-import { MovieDto } from './neo4j/dto/movie.dto';
 import { NetworkService } from './network/network.service';
 
 @Injectable()

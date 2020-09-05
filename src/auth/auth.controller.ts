@@ -4,10 +4,10 @@ import { GqlContextPayload } from '../common/types';
 import { LoginUserInput } from '../user/dto';
 import { User } from '../user/models';
 import { UserService } from '../user/user.service';
-import { AuthConfig } from './auth-config.interface';
-import { AuthService } from './auth.service';
-import { AccessToken } from './models';
 import { AUTH_CONFIG } from './auth.constants';
+import { AuthService } from './auth.service';
+import { AuthConfig } from './interfaces';
+import { AccessToken } from './models';
 
 @Controller()
 export class AuthController {

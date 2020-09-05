@@ -1,13 +1,8 @@
-import {
-  Injectable,
-  Inject,
-  OnApplicationShutdown,
-  Logger,
-} from '@nestjs/common';
-import { NetworkConfig } from './network-config.interface';
-import { NETWORK_CONFIG, NETWORK_CONNECTION } from './network.constants';
+import { Inject, Injectable, Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Neo4jService } from '../neo4j/neo4j.service';
+import { NetworkConfig } from './interfaces';
 import { NetworkConnection } from './network-connection';
+import { NETWORK_CONFIG, NETWORK_CONNECTION } from './network.constants';
 
 @Injectable()
 export class NetworkService implements OnApplicationShutdown {

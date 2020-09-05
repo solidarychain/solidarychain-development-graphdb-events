@@ -1,17 +1,11 @@
-import { getEnumKeyFromEnumValue } from '../../main.util';
+import { getEnumKeyFromEnumValue } from '../../common';
 import { Neo4jService } from '../../neo4j/neo4j.service';
 import { Persisted, Properties } from '../decorators';
-import {
-  GraphLabelRelationship,
-  ModelType,
-  ResourceType,
-  TransactionType,
-} from '../network.enums';
-import { Entity, WriteTransaction } from '../network.types';
+import { Entity, GraphLabelRelationship, ModelType, ResourceType, TransactionType, WriteTransaction } from '../types';
+import { Asset } from './asset.model';
 import { BaseModel } from './base.model';
 import { Good } from './good.model';
 import { Participant } from './participant.model';
-import { Asset } from './asset.model';
 
 export class Transaction extends BaseModel {
   @Persisted

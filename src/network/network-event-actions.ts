@@ -1,13 +1,15 @@
 import { Logger } from '@nestjs/common';
 import * as Client from 'fabric-client';
 import { Contract } from 'fabric-network';
-import { getEnumKeyFromEnumValue, writeJsonToFile } from '../main.util';
+import { getEnumKeyFromEnumValue, writeJsonToFile } from '../common';
 import { Neo4jService } from '../neo4j/neo4j.service';
-import { Asset, Cause, Person, Transaction } from './models';
+import { NetworkConfig } from './interfaces';
+import { Asset } from './models/asset.model';
+import { Cause } from './models/cause.model';
 import { Participant } from './models/participant.model';
-import { ChaincodeEvent } from './network.enums';
-import { ChaincodeEventActionArguments, ChaincodeEventActionFunction } from './network.types';
-import { NetworkConfig } from './network-config.interface';
+import { Person } from './models/person.model';
+import { Transaction } from './models/transaction.model';
+import { ChaincodeEvent, ChaincodeEventActionArguments, ChaincodeEventActionFunction } from './types';
 
 // type ChaincodeEventFunction = (error: Error, event?: Client.ChaincodeEvent | Client.ChaincodeEvent[], blockNumber?: string, transactionId?: string, status?: string) => any;
 

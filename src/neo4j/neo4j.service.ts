@@ -1,8 +1,8 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
-import { Neo4jConfig } from './neo4j-config.interface';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import neo4j, { Driver, QueryResult, Result, Session } from 'neo4j-driver';
+import { WriteTransaction } from '../network/types';
+import { Neo4jConfig } from './interfaces';
 import { NEO4J_CONFIG, NEO4J_DRIVER } from './neo4j.constants';
-import neo4j, { Driver, Session, Result, QueryResult } from 'neo4j-driver';
-import { WriteTransaction } from '../network/network.types';
 
 @Injectable()
 export class Neo4jService {

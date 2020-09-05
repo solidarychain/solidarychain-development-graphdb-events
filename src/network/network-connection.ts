@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { Contract, FileSystemWallet, Gateway, Network } from 'fabric-network';
 import * as path from 'path';
-import { readJsonFromFile } from '../main.util';
+import { readJsonFromFile } from '../common';
 import { Neo4jService } from '../neo4j/neo4j.service';
-import { NetworkConfig } from './network-config.interface';
+import { NetworkConfig } from './interfaces';
 import { NetworkEventActions } from './network-event-actions';
 
 export class NetworkConnection {

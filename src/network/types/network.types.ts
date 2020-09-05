@@ -1,8 +1,8 @@
 // export type EventFunction = (payload: any) => string;
 import * as Client from 'fabric-client';
-import { Cause } from './models/cause.model';
-import { Participant } from './models/participant.model';
-import { Person } from './models/person.model';
+import { Cause } from '../models/cause.model';
+import { Participant } from '../models/participant.model';
+import { Person } from '../models/person.model';
 import { EntityType } from './network.enums';
 
 export interface Entity {

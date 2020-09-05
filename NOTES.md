@@ -239,3 +239,46 @@ export class AuthController {
 > `@Inject(AUTH_CONFIG)` is required, else DI can't find AuthConfig to inject
 
 > last update: find that network module and service inject config without the need for `@inject`, can't know how, but seems that is related to using `inject: [NETWORK_CONFIG]`
+
+## Problem: TypeError: Class extends value undefined is not a constructor or null
+
+- [](https://stackoverflow.com/questions/43176006/typeerror-class-extends-value-undefined-is-not-a-function-or-null)
+
+```shell
+/media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-graphdb-events/dist/network/models/asset.model.js:17
+class Asset extends index_1.BaseModel {
+TypeError: Class extends value undefined is not a constructor or null
+```
+
+- [madge](https://github.com/pahen/madge)
+
+```shell
+$ madge --circular --extensions ts src/
+✖ Found 20 circular dependencies!
+
+1) index.ts > app.controller.ts
+2) auth/auth.controller.ts > auth/index.ts
+3) auth/index.ts > auth/auth.module.ts > auth/auth.resolver.ts
+4) auth/index.ts > auth/auth.module.ts
+5) auth/index.ts > auth/auth.service.ts
+6) neo4j/index.ts > neo4j/neo4j.module.ts
+7) neo4j/index.ts > neo4j/neo4j.service.ts
+8) neo4j/index.ts > neo4j/neo4j.util.ts
+9) network/index.ts > network/network.module.ts
+10) network/index.ts > network/network.service.ts
+11) network/index.ts > network/network.util.ts
+12) network/models/asset.model.ts > network/models/index.ts
+13) network/models/index.ts > network/models/cause.model.ts
+14) network/models/index.ts > network/models/good.model.ts
+15) network/models/index.ts > network/models/participant.model.ts
+16) network/models/index.ts > network/models/person.model.ts
+17) network/models/index.ts > network/models/transaction.model.ts
+18) user/index.ts > user/user.module.ts
+19) user/index.ts > user/user.resolver.ts
+20) user/index.ts > user/user.service.ts
+```
+
+[Nest] 1020   - 09/05/2020, 12:20:54 AM   [ExceptionHandler] A circular dependency has been detected. Please, make sure that each side of a bidirectional relationships are decorated with "forwardRef()". +253ms
+
+TIP DONT USE BAREL FILES IN ROOT OF MODULES, else we can use it
+this occurs because we use files that use files ....and it creates a circular Problem

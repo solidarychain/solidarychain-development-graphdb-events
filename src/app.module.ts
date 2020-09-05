@@ -3,14 +3,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-core';
 import { ConnectionParams } from 'subscriptions-transport-ws';
+import { envVariables as e, mapKeysToLowerCase } from './common';
+import { GqlContext, GqlContextPayload } from './common/types';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
-import { envVariables as e } from './common/env';
-import { GqlContext, GqlContextPayload } from './common/types';
-import { mapKeysToLowerCase } from './common/utils';
+import { UserModule } from './user/user.module';
 import { Neo4jModule } from './neo4j/neo4j.module';
 import { NetworkModule } from './network/network.module';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [

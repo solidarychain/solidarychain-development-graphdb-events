@@ -1,8 +1,8 @@
-import { BaseModel } from './base.model';
 import { Persisted, Properties } from '../decorators';
-import { PersonAttribute } from './classes/person-attribute.model';
+import { GenericBalance, PersonAttribute } from './classes';
+// import { BaseModel, Good, Participant } from './index';
+import { BaseModel } from './base.model';
 import { Good } from './good.model';
-import { GenericBalance } from './classes';
 import { Participant } from './participant.model';
 
 export class Person extends BaseModel {

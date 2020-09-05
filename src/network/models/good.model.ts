@@ -1,6 +1,7 @@
-import { GenericBalance } from './classes/generic-balance';
-import { BaseModel } from './base.model';
 import { Persisted, Properties } from '../decorators';
+import { GenericBalance } from './classes/generic-balance';
+// import { BaseModel, Participant } from './index';
+import { BaseModel } from './base.model';
 import { Participant } from './participant.model';
 
 export class Good extends BaseModel {

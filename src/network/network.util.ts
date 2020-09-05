@@ -1,6 +1,6 @@
-import { NetworkConfig } from './network-config.interface';
 import { NetworkConnection } from './network-connection';
 import { Neo4jService } from '../neo4j/neo4j.service';
+import { NetworkConfig } from './interfaces';
 
 export const createNetworkConnection = async (
   config: NetworkConfig,

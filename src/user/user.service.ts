@@ -6,14 +6,15 @@ import { UserData, UserRoles } from './types';
 import { userData } from './user.data';
 import { PaginationArgs } from '../common/dto';
 import { NewUserInput } from './dto/new-user.input';
-import { hashPassword } from '../auth/utils';
-import { newUuid } from '../common/utils';
 import { Neo4jService } from '../neo4j/neo4j.service';
-import { UserConfig } from './user-config.interface';
 import { USER_CONFIG } from './user.constants';
+import { UserConfig } from 'fabric-client';
+import { newUuid } from '../common';
+import { hashPassword } from '../auth/auth.utils';
+import { UserRepository } from './interfaces';
 
 @Injectable()
-export class UserService {
+export class UserService implements UserRepository{
   // init usersStore
   usersStore: UserStore = new UserStore();
 
