@@ -20,7 +20,6 @@ export class GqlLocalAuthGuard implements CanActivate {
   /**
    * Passport expects a validate() method with the following signature: validate(username: string, password:string): any
    */
-  // TODO: this is required?
   async validate(username: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(username, password);
     if (!user) {

@@ -226,15 +226,6 @@ export class BaseModel {
     writeTransaction.push({ cypher, params: this });
     this.linkToGenesis(writeTransaction);
     const txResult = await neo4jService.writeTransaction(writeTransaction);
-    // TODO: deprecated old write without transactions
-    // // Logger.debug(cypher, BaseModel.name);
-    // // pass this as parameter object
-    // const result: void | QueryResult = await neo4jService
-    //   .write(cypher, this)
-    //   .catch(error => {
-    //     Logger.error(error, BaseModel.name);
-    //   });
-    // return result;
   }
 
   /**
@@ -261,15 +252,6 @@ export class BaseModel {
     `;
     writeTransaction.push({ cypher, params: this });
     const txResult = await neo4jService.writeTransaction(writeTransaction);
-    // TODO: deprecated old write without transactions
-    // // Logger.debug(cypher, BaseModel.name);
-    // // pass this as parameter object
-    // const result: void | QueryResult = await neo4jService
-    //   .write(cypher, this)
-    //   .catch(error => {
-    //     Logger.error(error, BaseModel.name);
-    //   });
-    // return result;
   }
 
   /**

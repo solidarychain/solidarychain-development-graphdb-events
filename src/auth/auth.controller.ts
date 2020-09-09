@@ -40,8 +40,6 @@ export class AuthController {
     let payload: GqlContextPayload;
     try {
       payload = this.jwtService.verify(token, this.config.refreshTokenJwtSecret);
-      // TODO: clean up bellow line
-      // payload = this.jwtService.verify(token, e.refreshTokenJwtSecret);
     } catch (error) {
       // Logger.log(error);
       return invalidPayload();

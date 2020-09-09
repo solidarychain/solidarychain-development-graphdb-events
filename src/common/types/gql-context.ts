@@ -5,7 +5,6 @@ export interface GqlContext {
   req: Request;
   res: Response;
   payload?: GqlContextPayload;
-  // TODO: unknown type
-  // required for subscription
+  // required for subscription: unknow type, used any
   connection: any;
 }

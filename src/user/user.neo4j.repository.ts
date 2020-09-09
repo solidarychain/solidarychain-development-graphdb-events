@@ -15,7 +15,27 @@ export class UserNeo4jRepository implements UserRepository {
   ) { }
 
   async findAll(paginationArgs: PaginationArgs): Promise<User[]> {
-    throw new Error("Method not implemented.");
+    // always add pagination, we always have some paginationArgs, user or default
+    const pagination = `SKIP ${paginationArgs.skip} LIMIT ${paginationArgs.take}`;
+    const CYPHER_FIND_ALL = `MATCH (n:${NETWORK_MODEL_PERSON}) RETURN n ${pagination}`;
+    const result: void | QueryResult = await this.neo4jService
+      .read(CYPHER_FIND_ALL, {})
+      .catch(error => {
+        Logger.error(error, UserNeo4jRepository.name);
+      });
+    if (!result) {
+      return null;
+    }
+    // map person to user model
+    let newUser = User.new();
+    newUser = {
+      ...newUser,
+      // TODO remove hardcode firstName and lastName: require to restart network with new seed
+      firstName: 'moked',
+      lastName: 'moked',
+    }
+    // map from Person to User model
+    return result.records.map((e) => mapToObjectAndKeepProperties(e.get('n').properties, newUser));
   }
 
   async findOneByField(field: string, value: string): Promise<User> {
@@ -28,14 +48,15 @@ export class UserNeo4jRepository implements UserRepository {
     if (!result) {
       return null;
     }
-    // map person to userv model
-    // TODO remove hardcode firstName and lastName
+    // map person to user model
     let newUser = User.new();
     newUser = {
       ...newUser,
+      // TODO remove hardcode firstName and lastName: require to restart network with new seed
       firstName: 'moked',
       lastName: 'moked',
     }
+    // map from Person to User model
     return mapToObjectAndKeepProperties(result.records[0].get('n').properties, newUser);
   }
 

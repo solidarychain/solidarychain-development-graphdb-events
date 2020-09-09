@@ -90,12 +90,17 @@ export const removeEmpty = obj => {
 
 /**
  * ES7 / 2016 map object to other object, keep only target properties from source object
+ * and do some magic like convert strings to json objects
  * @param source object
  * @param target object
  */
 export const mapToObjectAndKeepProperties = (source: any, target: any) => {
   Object.entries(source).forEach(
     ([key, val]) => {
+      // catch neo4j string json objects and parse to objects
+      if (val.toString().startsWith('{"')) {
+        val = JSON.parse(val.toString());
+      }
       // if key exists in target and source as value
       if (key in target && (
         source[key] !== undefined && source[key] !== null && source[key] !== '')
