@@ -2,7 +2,7 @@ import { CookieParserMiddleware } from '@nest-middlewares/cookie-parser';
 import { Provider, DynamicModule, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { envVariables as e } from '../common/env';
+import { getEnvVariables as e } from '../common/env';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
@@ -14,7 +14,7 @@ import { LocalStrategy, JwtStrategy } from './passport';
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CookieParserMiddleware).forRoutes('/refresh-token');
-  }
+  }      
 
   static forRootAsync(configProvider): DynamicModule {
     return {
@@ -29,8 +29,8 @@ export class AuthModule {
         //   defaultStrategy: 'jwt',
         // }),
         JwtModule.register({
-          secret: e.accessTokenJwtSecret,
-          signOptions: { expiresIn: e.accessTokenExpiresIn },
+          secret: e().accessTokenJwtSecret,
+          signOptions: { expiresIn: e().accessTokenExpiresIn },
         }),
       ],
       controllers: [AuthController],

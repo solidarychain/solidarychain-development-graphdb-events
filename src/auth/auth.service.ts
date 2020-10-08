@@ -1,13 +1,13 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { SignOptions } from 'jsonwebtoken';
 import { GqlContextPayload } from '../common/types';
 import { UserService } from '../user/user.service';
-import AccessToken from './types/access-token';
 import { AUTH_CONFIG } from './auth.constants';
 import { AuthConfig } from './interfaces';
+import AccessToken from './types/access-token';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +47,13 @@ export class AuthService {
     const payload = { username: user.username, sub: user.userId, roles: user.roles, tokenVersion };
     return {
       // generate JWT from a subset of the user object properties
-      accessToken: this.jwtService.sign(payload, { ...options, expiresIn: this.config.refreshTokenExpiresIn }),
+      accessToken: this.jwtService.sign(
+        payload, { 
+          ...options, 
+          // require to use refreshTokenJwtSecret
+          secret: this.config.refreshTokenJwtSecret,
+          expiresIn: this.config.refreshTokenExpiresIn,
+        }),
     };
   }
 

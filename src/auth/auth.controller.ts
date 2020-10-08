@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, Inject, Post, Request, Response } from '@nestjs/common';
+import { Controller, HttpStatus, Inject, Logger, Post, Request, Response } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { GqlContextPayload } from '../common/types';
 import { LoginUserInput } from '../user/dto';
@@ -27,11 +27,11 @@ export class AuthController {
     @Request() req,
     @Response() res,
   ): Promise<any> {
-    // Logger.log('headers', JSON.stringify(req.headers, undefined, 2));
-    // Logger.log('cookies', JSON.stringify(req.cookies, undefined, 2));
+    // Logger.log(`headers ${JSON.stringify(req.headers, undefined, 2)}`, AuthController.name);
+    // Logger.log(`cookies ${JSON.stringify(req.cookies, undefined, 2)}`, AuthController.name);
     const invalidPayload = () => res.status(HttpStatus.UNAUTHORIZED).send({ valid: false, accessToken: '' });
     // get jid token from cookies
-    const token: string = req.cookies.jid;
+    const token: string = (req.cookies && req.cookies.jid) ? req.cookies.jid : null;
     // check if jid token is present
     if (!token) {
       return invalidPayload();
@@ -39,9 +39,9 @@ export class AuthController {
 
     let payload: GqlContextPayload;
     try {
-      payload = this.jwtService.verify(token, this.config.refreshTokenJwtSecret);
+      payload = this.jwtService.verify(token, { secret: this.config.refreshTokenJwtSecret});
     } catch (error) {
-      // Logger.log(error);
+      Logger.error(error, AuthController.name);
       return invalidPayload();
     }
 

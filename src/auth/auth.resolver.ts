@@ -22,7 +22,6 @@ export class AuthResolver {
   async userRegister(
     @Args('newUserData') newUserData: NewUserInput,
   ): Promise<User> {
-    debugger;
     const checkUsername = await this.userService.findOneByField('username', newUserData.username);
     if (checkUsername) {
       throw new ConflictException(`this username is already been taken by other user, please try another`);

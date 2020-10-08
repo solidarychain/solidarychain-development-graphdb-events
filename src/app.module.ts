@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-core';
 import { ConnectionParams } from 'subscriptions-transport-ws';
-import { envVariables as e, mapKeysToLowerCase } from './common';
+import { getEnvVariables as e, mapKeysToLowerCase } from './common';
 import { GqlContext, GqlContextPayload } from './common/types';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
@@ -32,7 +32,7 @@ import { NetworkModule } from './network/network.module';
         context: ({ req, res, payload, connection }: GqlContext) => ({ req, res, payload, connection }),
         // configure graphql cors here
         cors: {
-          origin: e.corsOriginReactFrontend,
+          origin: e().corsOriginReactFrontend,
           credentials: true,
         },
         // subscriptions/webSockets authentication

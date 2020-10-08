@@ -1,5 +1,5 @@
 @host = 192.168.1.31
-@port = 4443
+@port = 5443
 @uriBase = https://{{host}}:{{port}}
 @uri = {{uriBase}}/graphql
 @contentType = application/json
@@ -35,6 +35,10 @@ mutation userLogin($loginUserData: LoginUserInput!) {
 		"password": "{{userLoginPassword}}"
 	}
 }
+
+### rest refreshToken
+// @name refreshToken
+POST {{uriBase}}/refresh-token HTTP/1.1
 
 ### mutation: userRegister
 
@@ -150,7 +154,3 @@ query userById($id: String!){
 {
   "id": "{{someUser}}"
 }
-
-### rest request
-// @name userLogin
-POST {{uriBase}}/refresh-token HTTP/1.1

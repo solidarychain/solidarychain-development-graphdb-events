@@ -1,10 +1,12 @@
 {
   "cSpell.words": [
     "MSPID",
+    "Monteiro",
     "chaincode",
     "channelall",
     "graphdb",
     "koakh",
+    "middlewares",
     "nestjs",
     "prebuild",
     "prestart"
@@ -23,5 +25,8 @@
     "sideBar.border": "#1f6fd0"
   },
   "peacock.remoteColor": "#1857a4",
-  "peacock.color": "#1857a4"
+  "peacock.color": "#1857a4",
+  "files.exclude": {
+    ".bak/": true
+  }
 }
