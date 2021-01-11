@@ -39,7 +39,7 @@
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
-    "fabric-ca-client": "^1.4.10",
+    "fabric-ca-client": "^1.4.16",
     "fabric-client": "^1.4.10",
     "fabric-network": "^1.4.10",
     "graphql": "^15.3.0",
