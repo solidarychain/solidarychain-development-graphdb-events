@@ -2,6 +2,10 @@
 
 - [Table 5.18. Syntax for managing indexes](https://neo4j.com/docs/cypher-manual/current/administration/constraints/)
 
+## Notes
+
+> scroll down to goto to SCHEMA
+
 ```cypher
 // Create a unique node property constraint.
 CREATE CONSTRAINT [constraint_name]
@@ -32,6 +36,8 @@ ON (n.propertyName_1,
 // List all indexes in the database.
 CALL db.indexes
 ```
+
+## Schema (Paste in new Database)
 
 ```cypher
 CREATE CONSTRAINT ParticipantIdConstraint ON (n:Participant) ASSERT n.id IS UNIQUE;
@@ -76,6 +82,8 @@ CREATE INDEX TransactionAssetIdIndex FOR (n:Transaction) ON (n.assetId);
 CREATE INDEX TransactionCreatedDateIndex FOR (n:Transaction) ON (n.createdDate);
 ```
 
+## Schema (Paste in new Network after Remove all Nodes)
+
 ```cypher
 MERGE (g {
   id: "00000000-0000-0000-0000-000000000000"
@@ -90,9 +98,36 @@ MATCH (g {
   id: "00000000-0000-0000-0000-000000000000"
 })
 MERGE (n:Person {
+  id: "4ea88521-031b-4279-9165-9c10e1839000",
+  fiscalNumber: "PT182692123",
+  mobilePhone: "+351936200000",
+  otherInformation: "",
+  username: "admin",
+  password: "Aa123#12",
+  email: "admin@example.com"
+})-[:CONNECTED]->(g);
+
+MATCH (g {
+  id: "00000000-0000-0000-0000-000000000000"
+})
+MERGE (n:Person {
   id: "4ea88521-031b-4279-9165-9c10e1839001",
-  firstname: "John",
-  lastname: "Doe",
+  fiscalNumber: "PT999999990",
+  mobilePhone: "+351936200001",
+  otherInformation: "",
+  username: "anon",
+  password: "Aa123#12",
+  email: "anon@example.com"
+})-[:CONNECTED]->(g);
+
+
+MATCH (g {
+  id: "00000000-0000-0000-0000-000000000000"
+})
+MERGE (n:Person {
+  id: "4ea88521-031b-4279-9165-9c10e1839002",
+  firstName: "John",
+  lastName: "Doe",
   beneficiaryNumber: "285191659",
   birthDate: "61985472",
   cardVersion: "006.007.23",
@@ -102,24 +137,27 @@ MERGE (n:Person {
   emissionDate: "61985472",
   emittingEntity: "República Portuguesa",
   expirationDate: "61985472",
-  fatherFirstname: "Alberto",
-  fatherLastname: "De Andrade Monteiro",
+  fatherFirstName: "Alberto",
+  fatherLastName: "De Andrade Monteiro",
   fiscalNumber: "182692124",
   gender: "M",
   height: "1.81",
   identityNumber: "098794620",
-  motherFirstname: "Maria Da Graça De Oliveira Mendes",
-  motherLastname: "Monteiro",
+  motherFirstName: "Maria Da Graça De Oliveira Mendes",
+  motherLastName: "Monteiro",
   nationality: "PRT",
   otherInformation: "",
   pan: "0000036014662658",
   requestLocation: "CRCiv. Figueira da Foz",
   socialSecurityNumber: "11103478242",
   username: "johndoe",
-  password: "12345678",
+  password: "Aa456#45",
   email: "johndoe@mail.com"
 })-[:CONNECTED]->(g);
+```
 
-# check with
+check with
+
+```cypher
 MATCH (n)-[r]-(m) RETURN n,m,r;
 ```
