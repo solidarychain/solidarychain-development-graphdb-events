@@ -44,7 +44,7 @@
     "fabric-network": "^1.4.10",
     "graphql": "^15.3.0",
     "graphql-subscriptions": "^1.1.0",
-    "graphql-tools": "^6.1.0",
+    "graphql-tools": "^8.0.0",
     "graphql-type-json": "^0.3.2",
     "neo4j-driver": "^4.1.0",
     "passport": "^0.4.1",
