@@ -57,7 +57,7 @@
     "yup": "^0.29.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "^7.0.0",
+    "@nestjs/cli": "^9.1.8",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.4.4",
     "@types/express": "^4.17.7",
@@ -77,7 +77,7 @@
     "prettier": "^2.1.1",
     "supertest": "^4.0.2",
     "ts-jest": "^26.3.0",
-    "ts-loader": "^6.2.1",
+    "ts-loader": "^9.4.2",
     "ts-node": "^9.0.0",
     "tsc-watch": "^4.2.9",
     "tsconfig-paths": "^3.9.0",
