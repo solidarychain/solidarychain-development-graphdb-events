@@ -41,7 +41,7 @@
     "class-validator": "^0.12.2",
     "fabric-ca-client": "^1.4.10",
     "fabric-client": "^1.4.10",
-    "fabric-network": "^1.4.10",
+    "fabric-network": "^2.1.0",
     "graphql": "^15.3.0",
     "graphql-subscriptions": "^1.1.0",
     "graphql-tools": "^6.1.0",
@@ -51,7 +51,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.3.1",
     "rxjs": "^6.6.2",
     "uuid": "^8.3.0",
     "yup": "^0.29.3"
